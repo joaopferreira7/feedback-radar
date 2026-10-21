@@ -1,0 +1,27 @@
+# Segredos
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Saídas geradas (podem conter dados reais de clientes)
+saidas/
+data/privado/
+data/rotulagem/rotulador_*.xlsx
+data/rotulagem/gabarito.xlsx
+
+# Datasets baixados (grandes e com licença própria)
+data/brutos/
+
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Configuracao local do Claude Code
+.claude/
