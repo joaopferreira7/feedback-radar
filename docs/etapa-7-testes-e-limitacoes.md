@@ -54,8 +54,8 @@ pytest
 
 ### Custo e limites
 - Plano gratuito com limite de requisições por minuto e por dia (os valores mudam; ver https://ai.google.dev/gemini-api/docs/rate-limits).
-- Estimativa de tokens aproximada (~4 caracteres/token).
-- Custo por avaliação no plano pago: ~US$ 0,00016 (Etapa 3); baixo, mas cresce se houver muitos retries.
+- Estimativa de tokens aproximada (~4 caracteres/token); no teste real, o consumo foi ~35% maior que o estimado (retries e formatação do JSON).
+- Custo por avaliação no plano pago: ~US$ 0,0003 a 0,0004 (Etapa 3); baixo, mas o preço do modelo **dobra em 01/01/2027** e cresce se houver muitos retries.
 
 ### Privacidade e segurança
 - **Vazamento de dados:** os textos vão para o Google. No **plano gratuito**, os termos permitem que o conteúdo seja usado para melhorar os produtos e revisado por pessoas. Anonimização é obrigatória com dados reais, e dados sensíveis (saúde, por exemplo) não devem ser enviados.

@@ -91,7 +91,7 @@ feedback-radar/
 7. [Roteiro de testes e limitações](docs/etapa-7-testes-e-limitacoes.md)
 8. [Rascunho do relatório acadêmico](docs/etapa-8-relatorio-academico.md)
 
-Extra: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md)
+Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) · [Do protótipo à aplicação prática](docs/aplicacao-pratica.md)
 
 ## Avisos importantes
 
