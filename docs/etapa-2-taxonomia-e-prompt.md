@@ -74,7 +74,7 @@ O prompt completo está em `prompts.py`. Estrutura:
 - **Avaliações enviadas como JSON com `id`:** evita confusão entre avaliações do mesmo lote e permite conferir se todas voltaram.
 - **Temperatura 0:** reduz a variação entre execuções (importante para a validação ser reprodutível). Mesmo assim, LLMs não são 100% determinísticos.
 - **`response_mime_type="application/json"`:** o Gemini passa a responder JSON puro. Ainda assim validamos tudo, porque "JSON válido" não significa "JSON correto".
-- **Raciocínio interno desligado (`thinking_budget=0`):** a tarefa é simples; o raciocínio do Gemini 2.5 deixaria a chamada mais lenta e cara sem ganho claro. Vale testar ligado/desligado na validação.
+- **Raciocínio interno desligado (`thinking_budget=0`):** a tarefa é simples; o raciocínio do Gemini Flash deixaria a chamada mais lenta e cara sem ganho claro. Vale testar ligado/desligado na validação.
 - **A nota (estrelas) NÃO é enviada ao modelo:** queremos medir a compreensão do texto. A nota aparece no dashboard e permite achar divergências (ex.: 5 estrelas com texto negativo).
 - **Exemplos fictícios no few-shot:** não usamos avaliações da amostra de validação nos exemplos, senão a métrica ficaria inflada (o modelo "veria a resposta").
 - **Correção guiada:** se a resposta for rejeitada, a próxima tentativa inclui a mensagem de erro do validador ("temas fora da taxonomia: ['estacionamento']").

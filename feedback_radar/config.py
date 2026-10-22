@@ -11,7 +11,7 @@ load_dotenv()
 
 PROVEDOR_LLM = os.getenv("PROVEDOR_LLM", "gemini")  # "gemini" ou "simulado"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODELO = os.getenv("GEMINI_MODELO", "gemini-2.5-flash")
+GEMINI_MODELO = os.getenv("GEMINI_MODELO", "gemini-3.8-flash")
 GEMINI_DESATIVAR_RACIOCINIO = os.getenv("GEMINI_DESATIVAR_RACIOCINIO", "1") == "1"
 
 # Quantas avaliações vão em cada chamada ao LLM

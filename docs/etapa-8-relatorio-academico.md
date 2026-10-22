@@ -24,7 +24,7 @@ As técnicas de IA empregadas são classificação de texto, análise de sentime
 |---|---|---|
 | Python 3 | linguagem principal | conhecida pelo grupo, ecossistema de dados |
 | pandas | leitura e manipulação dos dados | padrão para dados tabulares |
-| Google Gemini 2.5 Flash (API) | classificação e geração do relatório | plano gratuito, bom desempenho em português, saída JSON |
+| Google Gemini 3.8 Flash (API) | classificação e geração do relatório | plano gratuito, bom desempenho em português, saída JSON |
 | Pydantic | validação do JSON gerado pelo LLM | garante formato e valores permitidos |
 | Streamlit | dashboard web | componentes prontos para dashboards de dados |
 | Plotly | gráficos interativos | integração direta com Streamlit |

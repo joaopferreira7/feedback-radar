@@ -108,7 +108,9 @@ def gerar_relatorio(df: pd.DataFrame, cliente) -> tuple[RespostaRelatorio, dict]
             return relatorio, dados
         except (ErroFormato, ValidationError) as erro:
             erro_anterior = str(erro)
-        except Exception:
+        except Exception as erro:
+            if getattr(erro, "code", None) in (400, 401, 403, 404):  # erro permanente da API
+                raise RuntimeError(f"Erro da API: {erro}") from erro
             time.sleep(5 * 2 ** (tentativa - 1))
     raise RuntimeError(f"Não foi possível gerar o relatório após {config.MAX_TENTATIVAS} tentativas. "
                        f"Último erro: {erro_anterior}")

@@ -7,7 +7,7 @@ flowchart LR
     U([Usuário]) -->|CSV| L[Leitura e validação<br/>leitura_csv.py]
     L --> A[Anonimização<br/>anonimizacao.py]
     A --> B[Divisão em lotes<br/>classificador.py]
-    B -->|prompt + few-shot| G{{LLM<br/>Gemini 2.5 Flash}}
+    B -->|prompt + few-shot| G{{LLM<br/>Gemini 3.8 Flash}}
     G -->|JSON| V[Validação Pydantic<br/>esquemas.py]
     V -->|inválido: retry com o erro| G
     V -->|válido| D[(DataFrame<br/>classificado)]
@@ -46,7 +46,7 @@ feedback-radar/
 | Decisão | Por quê |
 |---|---|
 | **Python + pandas** | Linguagem que o grupo já conhece; pandas resolve leitura de CSV, filtros e agregações em poucas linhas. |
-| **Google Gemini 2.5 Flash** (API) | Tem **plano gratuito** sem cartão de crédito (Google AI Studio), entende bem português, aceita resposta em JSON (`response_mime_type`). No plano pago, custa ~US$ 0,30 por milhão de tokens de entrada, menos de US$ 0,001 por avaliação. |
+| **Google Gemini 3.8 Flash** (API) | Tem **plano gratuito** sem cartão de crédito (Google AI Studio), entende bem português, aceita resposta em JSON (`response_mime_type`). No teste real, o custo equivalente no plano pago ficou abaixo de US$ 0,001 por avaliação (ver Etapa 3; confira os preços atuais). O `gemini-2.5-flash` foi descontinuado para contas novas durante o projeto, o que mostra o risco de depender de um fornecedor: o modelo é configurável no `.env`. |
 | Alternativas consideradas | **Groq** (gratuito, modelos Llama, muito rápido, mas limites e modelos mudam com frequência); **Ollama** (roda local, grátis e privado, mas exige PC com boa memória e é mais lento); **OpenAI/Claude** (ótima qualidade, mas sem plano gratuito de API). O código isola o provedor em `llm.py`, então trocar é só criar uma classe nova. |
 | **Streamlit** em vez de Gradio | Streamlit foi feito para *dashboards de dados*: abas, cards de métricas (`st.metric`), tabelas filtráveis, upload e download, gráficos Plotly — tudo nativo. Gradio é ótimo para *demos de modelo* (entrada → saída) e para publicar no Hugging Face Spaces, mas montar um dashboard com várias visões dá mais trabalho. |
 | **Plotly** | Gráficos interativos (passar o mouse, zoom) com uma linha de código. |

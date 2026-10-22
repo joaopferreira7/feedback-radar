@@ -48,7 +48,7 @@ flowchart TD
 
 ### Custo por avaliação (estimativa)
 
-Com o CSV de exemplo (43 avaliações, lotes de 10): ~8.200 tokens no total → **~US$ 0,0067** no plano pago do Gemini 2.5 Flash, ou seja, **~US$ 0,00016 por avaliação** (menos de R$ 0,001). 1.000 avaliações custariam ~US$ 0,16. No plano gratuito o custo é zero, mas há limite diário de requisições: com lotes de 10, 500 avaliações = 50 chamadas.
+Execução real com o CSV de exemplo (43 avaliações, lotes de 10, `gemini-3.8-flash`, 21/10/2026): 5 chamadas + 2 retries (erro 503 de sobrecarga do Google, recuperado automaticamente), custo calculado de **~US$ 0,009** usando os preços configurados no `.env` (US$ 0,30 / US$ 2,50 por milhão de tokens), ou seja, **~US$ 0,0002 por avaliação**; 1.000 avaliações custariam ~US$ 0,20. **Confira o preço atual do modelo em https://ai.google.dev/pricing e ajuste `PRECO_ENTRADA_1M` e `PRECO_SAIDA_1M`**: os valores padrão eram os do Gemini 2.5 Flash. No plano gratuito o custo é zero, mas há limite diário de requisições: com lotes de 10, 500 avaliações = 50 chamadas.
 
 > A estimativa usa "~4 caracteres por token", o que é aproximado. O valor real aparece depois da execução (tokens informados pela API).
 

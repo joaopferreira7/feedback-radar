@@ -19,6 +19,7 @@ from feedback_radar.relatorio import gerar_relatorio, markdown_para_pdf, relator
 
 
 def main():
+    sys.stdout.reconfigure(line_buffering=True)  # mostra o progresso na hora
     p = argparse.ArgumentParser(description="Classifica avaliações com o Feedback Radar.")
     p.add_argument("entrada", help="CSV com a coluna 'texto'")
     p.add_argument("--saida", default="saidas/avaliacoes_classificadas.csv")

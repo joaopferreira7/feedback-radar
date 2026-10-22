@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 
 from feedback_radar import config
-from feedback_radar.classificador import classificar_dataframe, estimar_custo, lista_temas
+from feedback_radar.classificador import ErroAPI, classificar_dataframe, estimar_custo, lista_temas
 from feedback_radar.graficos import (grafico_evolucao, grafico_matriz_confusao, grafico_sentimento,
                                      grafico_temas)
 from feedback_radar.leitura_csv import ErroValidacaoCSV, ler_csv
@@ -101,9 +101,13 @@ with aba_dados:
                 st.error(str(erro))
                 st.stop()
             barra = st.progress(0.0, text="Classificando...")
-            df_class, stats = classificar_dataframe(
-                a_classificar, cliente, tamanho_lote, anonimizar_textos=anonimizar,
-                ao_progredir=lambda f: barra.progress(f, text=f"Classificando... {f:.0%}"))
+            try:
+                df_class, stats = classificar_dataframe(
+                    a_classificar, cliente, tamanho_lote, anonimizar_textos=anonimizar,
+                    ao_progredir=lambda f: barra.progress(f, text=f"Classificando... {f:.0%}"))
+            except ErroAPI as erro:
+                st.error(f"{erro}\n\nVerifique a chave e o nome do modelo (GEMINI_MODELO) no .env.")
+                st.stop()
             barra.empty()
             st.session_state["df_classificado"] = df_class
             st.session_state["stats"] = stats

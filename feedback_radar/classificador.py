@@ -26,6 +26,10 @@ class ErroFormato(Exception):
     """A resposta do LLM não está no formato esperado."""
 
 
+class ErroAPI(Exception):
+    """Erro permanente da API (ex.: chave inválida, modelo descontinuado)."""
+
+
 @dataclass
 class Estatisticas:
     """Contadores para controle de custo e tempo (mostrados no dashboard)."""
@@ -98,6 +102,9 @@ def classificar_lote(cliente, itens: list[dict], stats: Estatisticas,
             erro_anterior = str(erro)
             stats.erros.append(f"Formato (tentativa {tentativa}): {erro_anterior[:200]}")
         except Exception as erro:  # erro de rede/API (ex.: 429 limite de uso)
+            # Erros permanentes (chave inválida, modelo inexistente): não adianta repetir
+            if getattr(erro, "code", None) in (400, 401, 403, 404):
+                raise ErroAPI(f"Erro da API que não se resolve tentando de novo: {erro}") from erro
             erro_anterior = None
             stats.erros.append(f"API (tentativa {tentativa}): {str(erro)[:200]}")
             # Espera exponencial: 5s, 10s, 20s... (mais longa se for limite de uso)
