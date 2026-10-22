@@ -31,7 +31,8 @@ class ClienteGemini:
         api_key = api_key or config.GEMINI_API_KEY
         if not api_key or api_key == "cole-sua-chave-aqui":
             raise ErroConfiguracao(
-                "GEMINI_API_KEY não definida. Copie .env.example para .env e cole sua chave "
+                "GEMINI_API_KEY não definida. Copie .env.example para .env (ou defina nos Secrets do "
+                "Streamlit) e cole sua chave "
                 "(https://aistudio.google.com/apikey), ou use o provedor 'simulado'."
             )
         # Import aqui dentro para o modo simulado funcionar mesmo sem a biblioteca

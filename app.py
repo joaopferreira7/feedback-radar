@@ -13,6 +13,7 @@ from feedback_radar.graficos import (grafico_evolucao, grafico_matriz_confusao, 
                                      grafico_temas)
 from feedback_radar.leitura_csv import ErroValidacaoCSV, ler_csv
 from feedback_radar.llm import ErroConfiguracao, criar_cliente
+from feedback_radar.login import exigir_login
 from feedback_radar.relatorio import (calcular_impacto, gerar_relatorio, markdown_para_pdf,
                                       relatorio_markdown)
 from feedback_radar.taxonomia import NOMES_TEMAS, SENTIMENTOS
@@ -23,6 +24,7 @@ EXEMPLO = Path(__file__).parent / "data" / "exemplos" / "avaliacoes_exemplo.csv"
 st.set_page_config(page_title="Feedback Radar", page_icon="📡", layout="wide")
 st.title("📡 Feedback Radar")
 st.caption("Transforme avaliações de clientes em prioridades de melhoria com IA generativa.")
+exigir_login()  # nada abaixo roda (nem chamadas à API) sem login
 
 # ---------------- Barra lateral: configurações ----------------
 with st.sidebar:
@@ -81,7 +83,7 @@ with aba_dados:
 
         if len(df_bruto) > config.MAX_AVALIACOES:
             st.warning(f"Só as primeiras {config.MAX_AVALIACOES} avaliações serão classificadas "
-                       "(limite em MAX_AVALIACOES no .env).")
+                       "(limite em MAX_AVALIACOES no .env ou nos Secrets).")
         a_classificar = df_bruto.head(config.MAX_AVALIACOES)
 
         est = estimar_custo(a_classificar["texto"].tolist(), tamanho_lote)
@@ -106,7 +108,7 @@ with aba_dados:
                     a_classificar, cliente, tamanho_lote, anonimizar_textos=anonimizar,
                     ao_progredir=lambda f: barra.progress(f, text=f"Classificando... {f:.0%}"))
             except ErroAPI as erro:
-                st.error(f"{erro}\n\nVerifique a chave e o nome do modelo (GEMINI_MODELO) no .env.")
+                st.error(f"{erro}\n\nVerifique a chave e o nome do modelo (GEMINI_MODELO) no .env ou nos Secrets.")
                 st.stop()
             barra.empty()
             st.session_state["df_classificado"] = df_class

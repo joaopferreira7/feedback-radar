@@ -24,6 +24,8 @@ copy .env.example .env        # Windows (no Linux/macOS: cp .env.example .env)
 streamlit run app.py
 ```
 
+O app exige login. No seu computador, deixe `LOGIN_DESATIVADO=1` no `.env` (já vem assim no `.env.example`). Para publicar na internet com login Google ou senha, veja [docs/deploy.md](docs/deploy.md).
+
 Sem chave? Escolha o provedor **simulado** na barra lateral (ou `PROVEDOR_LLM=simulado` no `.env`): ele usa regras por palavras-chave, sem IA e sem custo, só para testar o fluxo.
 
 ### Outros comandos
@@ -62,7 +64,8 @@ Aceita vírgula ou ponto e vírgula, UTF-8 ou Windows-1252, e nomes alternativos
 feedback-radar/
 ├── app.py                      # dashboard Streamlit (4 abas)
 ├── feedback_radar/             # lógica do sistema
-│   ├── config.py               # configurações lidas do .env
+│   ├── config.py               # configurações lidas dos Secrets ou do .env
+│   ├── login.py                # login (Google ou senha) do app publicado
 │   ├── taxonomia.py            # temas fixos e definições
 │   ├── prompts.py              # prompts com few-shot
 │   ├── esquemas.py             # validação do JSON (Pydantic)
