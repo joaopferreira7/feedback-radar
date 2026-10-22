@@ -1,4 +1,4 @@
-# 📡 Feedback Radar
+# Feedback Radar
 
 Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard** e um **relatório de prioridades de melhoria** com exemplos reais. O diferencial é a **validação**: comparamos a IA com a rotulagem manual do grupo em 100 avaliações.
 

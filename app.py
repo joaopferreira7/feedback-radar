@@ -21,9 +21,9 @@ from feedback_radar.validacao import calcular_metricas, carregar_gabarito, tabel
 
 EXEMPLO = Path(__file__).parent / "data" / "exemplos" / "avaliacoes_exemplo.csv"
 
-st.set_page_config(page_title="Feedback Radar", page_icon="📡", layout="wide")
-st.title("📡 Feedback Radar")
-st.caption("Transforme avaliações de clientes em prioridades de melhoria com IA generativa.")
+st.set_page_config(page_title="Feedback Radar", layout="wide")
+st.title("Feedback Radar")
+st.caption("Classificação de avaliações de clientes e lista de prioridades de melhoria.")
 exigir_login()  # nada abaixo roda (nem chamadas à API) sem login
 
 # ---------------- Barra lateral: configurações ----------------
@@ -47,13 +47,13 @@ def _df() -> pd.DataFrame | None:
 
 
 aba_dados, aba_dash, aba_rel, aba_val = st.tabs(
-    ["1. Dados e classificação", "2. Dashboard", "3. Relatório de prioridades", "4. Validação"])
+    ["Dados", "Painel", "Prioridades", "Validação"])
 
 # ---------------- Aba 1: upload e classificação ----------------
 with aba_dados:
-    st.subheader("Envie um CSV de avaliações")
+    st.subheader("Arquivo de avaliações")
     st.markdown("Coluna obrigatória: **texto**. Opcionais: **data**, **nota** (1 a 5), **fonte**. "
-                "Se o arquivo já tiver sido classificado pelo Feedback Radar, ele é carregado direto.")
+                "Um arquivo já classificado pelo Feedback Radar é carregado sem nova classificação.")
     col_up, col_ex = st.columns([3, 1])
     arquivo = col_up.file_uploader("Arquivo CSV", type=["csv"])
     usar_exemplo = col_ex.button("Usar dados de exemplo")
@@ -69,7 +69,7 @@ with aba_dados:
                 df_bruto["intensidade"] = pd.to_numeric(df_bruto["intensidade"], errors="coerce")
                 st.session_state["df_classificado"] = df_bruto
                 st.session_state["stats"] = None
-                st.success("Arquivo já classificado carregado. Veja as abas 2 a 4.")
+                st.success("Arquivo já classificado carregado.")
         except ErroValidacaoCSV as erro:
             st.error(f"Problema no arquivo: {erro}")
             st.session_state.pop("df_bruto", None)
@@ -132,7 +132,7 @@ with aba_dados:
 with aba_dash:
     df = _df()
     if df is None:
-        st.info("Classifique um arquivo na aba 1 para ver o dashboard.")
+        st.info("Nenhum arquivo classificado ainda. Comece pela aba Dados.")
     else:
         ok = df[df["status"] == "ok"]
         pct = ok["sentimento"].value_counts(normalize=True).reindex(SENTIMENTOS, fill_value=0) * 100
@@ -142,7 +142,7 @@ with aba_dash:
         c3.metric("Neutras", f"{pct['neutro']:.0f}%")
         c4.metric("Negativas", f"{pct['negativo']:.0f}%")
         nota = pd.to_numeric(ok["nota"], errors="coerce").mean() if "nota" in ok else None
-        c5.metric("Nota média", f"{nota:.1f} ★" if nota and nota == nota else "—")
+        c5.metric("Nota média", f"{nota:.1f}/5" if nota and nota == nota else "—")
 
         g1, g2 = st.columns(2)
         g1.plotly_chart(grafico_sentimento(ok), width="stretch")
@@ -174,9 +174,9 @@ with aba_dash:
 with aba_rel:
     df = _df()
     if df is None:
-        st.info("Classifique um arquivo na aba 1 primeiro.")
+        st.info("Nenhum arquivo classificado ainda. Comece pela aba Dados.")
     else:
-        st.subheader("Ranking de impacto por tema")
+        st.subheader("Impacto por tema")
         st.caption("Impacto = frequência do tema × % de menções negativas × (intensidade média negativa ÷ 5). "
                    "Calculado pelo código, não pelo LLM.")
         impacto = calcular_impacto(df)
@@ -184,7 +184,7 @@ with aba_rel:
                                            "intensidade_media_neg": "{:.1f}", "impacto": "{:.3f}"}),
                      width="stretch", hide_index=True)
 
-        if st.button("Gerar relatório de prioridades com IA", type="primary"):
+        if st.button("Gerar relatório", type="primary"):
             try:
                 cliente = criar_cliente(provedor)
                 with st.spinner("Gerando relatório..."):
@@ -205,14 +205,14 @@ with aba_rel:
 
 # ---------------- Aba 4: validação ----------------
 with aba_val:
-    st.subheader("IA × rotulagem manual do grupo")
+    st.subheader("Comparação com a rotulagem do grupo")
     st.markdown("Envie a planilha de rotulagem preenchida (gerada por "
                 "`scripts/gerar_planilha_rotulagem.py`). Ela é comparada com o arquivo classificado "
-                "carregado na aba 1 (os ids precisam ser os mesmos).")
+                "carregado na aba Dados (os ids precisam ser os mesmos).")
     gabarito_arq = st.file_uploader("Planilha de rotulagem (.xlsx ou .csv)", type=["xlsx", "csv"])
     df = _df()
     if gabarito_arq is not None and df is None:
-        st.info("Carregue também o CSV classificado na aba 1.")
+        st.info("Carregue também o CSV classificado na aba Dados.")
     elif gabarito_arq is not None:
         try:
             gabarito = carregar_gabarito(gabarito_arq)
@@ -234,10 +234,10 @@ with aba_val:
         v1.plotly_chart(grafico_matriz_confusao(m["matriz_confusao"]), width="stretch")
         v2.markdown("**Por classe de sentimento**")
         v2.dataframe(m["por_classe"].round(2), hide_index=True, width="stretch")
-        st.markdown(f"**Temas** — acerto exato do conjunto: {m['acerto_exato_temas']:.0%}")
+        st.markdown(f"Temas: acerto exato do conjunto em {m['acerto_exato_temas']:.0%}")
         st.dataframe(m["temas"].round(2), hide_index=True, width="stretch")
 
-        st.markdown("**Casos em que a IA discordou do grupo** (hipóteses automáticas — revisar!)")
+        st.markdown("Casos em que a IA discordou do grupo. As causas sugeridas são automáticas e precisam de revisão.")
         erros = tabela_de_erros(m)
         st.dataframe(erros, hide_index=True, width="stretch")
         st.download_button("Baixar tabela de erros", erros.to_csv(index=False).encode("utf-8-sig"),

@@ -5,7 +5,8 @@ import plotly.express as px
 from .classificador import lista_temas
 from .taxonomia import NOMES_TEMAS, SENTIMENTOS
 
-CORES = {"positivo": "#2e9e5b", "neutro": "#9aa0a6", "negativo": "#d64545"}
+# Mesma paleta do tema em .streamlit/config.toml
+CORES = {"positivo": "#4f7a5a", "neutro": "#b9b1a4", "negativo": "#b0493b"}
 
 
 def grafico_sentimento(df: pd.DataFrame):
@@ -42,7 +43,7 @@ def grafico_evolucao(df: pd.DataFrame):
 
 
 def grafico_matriz_confusao(matriz: pd.DataFrame):
-    fig = px.imshow(matriz, text_auto=True, color_continuous_scale="Blues",
+    fig = px.imshow(matriz, text_auto=True, color_continuous_scale=["#f4f1ea", "#2f4858"],
                     title="Matriz de confusão do sentimento (linhas = humano, colunas = IA)")
     fig.update_layout(coloraxis_showscale=False)
     return fig

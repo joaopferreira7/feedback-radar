@@ -1,0 +1,8 @@
+# Tema visual do app (vale localmente e no Streamlit Community Cloud)
+[theme]
+base = "light"
+primaryColor = "#2f4858"
+backgroundColor = "#fbfaf7"
+secondaryBackgroundColor = "#f1ede4"
+textColor = "#26231f"
+font = "sans serif"
