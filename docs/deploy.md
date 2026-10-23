@@ -33,6 +33,10 @@ Copie o conteúdo de `.streamlit/secrets.toml.example` e troque os valores:
 
 As configurações são lidas quando o app inicia. Depois de alterar os Secrets, use Reboot app no menu do app.
 
+Cada push na branch do app atualiza o código sozinho, mas o Streamlit mantém na memória os módulos de `feedback_radar` já carregados. Se depois de um push aparecer um `ImportError`, use Reboot app.
+
+Como o repositório é privado, o Streamlit cria o app como privado: só quem tem conta no Streamlit e foi convidado em Share consegue abrir o link, além da senha do app. Para o piloto, convide o e-mail de cada dono de negócio em Share ou deixe o app público nessa mesma tela e confie na senha.
+
 ## 3. Login com Google
 
 1. No Google Cloud Console (https://console.cloud.google.com), crie um projeto.
