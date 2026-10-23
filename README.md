@@ -1,6 +1,6 @@
 # Feedback Radar
 
-Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard** e um **relatório de prioridades de melhoria** com exemplos reais. O diferencial é a **validação**: comparamos a IA com a rotulagem manual do grupo em 100 avaliações.
+Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard**, um **relatório de prioridades de melhoria** com exemplos reais e um **agente analista** que responde perguntas sobre as avaliações investigando os dados em vários passos (busca semântica e ferramentas de contagem). O diferencial é a **validação**: comparamos a IA com a rotulagem manual do grupo em 100 avaliações.
 
 ## Como rodar localmente
 
@@ -45,6 +45,9 @@ python scripts/gerar_planilha_rotulagem.py data/olist_500.csv --n 100
 
 # Comparar IA × gabarito humano
 python scripts/avaliar_validacao.py --gabarito data/rotulagem/gabarito.xlsx --ia saidas/amostra_classificada.csv
+
+# Rodar as perguntas de avaliação do agente analista
+python scripts/avaliar_agente.py saidas/avaliacoes_classificadas.csv --provedor gemini
 ```
 
 ## Formato do CSV
@@ -62,7 +65,7 @@ Aceita vírgula ou ponto e vírgula, UTF-8 ou Windows-1252, e nomes alternativos
 
 ```
 feedback-radar/
-├── app.py                      # dashboard Streamlit (4 abas)
+├── app.py                      # dashboard Streamlit (5 abas)
 ├── feedback_radar/             # lógica do sistema
 │   ├── config.py               # configurações lidas dos Secrets ou do .env
 │   ├── login.py                # login (Google ou senha) do app publicado
@@ -74,13 +77,15 @@ feedback-radar/
 │   ├── anonimizacao.py         # remoção de dados pessoais (LGPD)
 │   ├── classificador.py        # lotes, retry, custo
 │   ├── relatorio.py            # ranking de impacto + relatório MD/PDF
+│   ├── agente.py               # agente analista (laço ReAct e ferramentas)
+│   ├── busca.py                # busca semântica (embeddings ou TF-IDF)
 │   ├── validacao.py            # métricas IA × humano
 │   └── graficos.py             # gráficos Plotly
 ├── scripts/                    # linha de comando
 ├── tests/                      # pytest
 ├── data/exemplos/              # CSV fictício para demonstração
 ├── data/rotulagem/             # modelo da planilha de rotulagem
-└── docs/                       # etapas 1 a 8 + dados e privacidade
+└── docs/                       # etapas 1 a 9 + dados e privacidade
 ```
 
 ## Documentação por etapa
@@ -93,6 +98,7 @@ feedback-radar/
 6. [Validação contra rotulagem manual](docs/etapa-6-validacao.md)
 7. [Roteiro de testes e limitações](docs/etapa-7-testes-e-limitacoes.md)
 8. [Rascunho do relatório acadêmico](docs/etapa-8-relatorio-academico.md)
+9. [Agente analista](docs/etapa-9-agente-analista.md)
 
 Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) · [Do protótipo à aplicação prática](docs/aplicacao-pratica.md)
 

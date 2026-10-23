@@ -50,7 +50,7 @@ Abra o endereço numa janela anônima e confira se o app pede login antes de mos
 
 ## Riscos
 
-Cota da chave. Todos os usuários usam a mesma chave, então um usuário autorizado pode esgotar a cota diária do plano gratuito para todo mundo. Mantenha `MAX_AVALIACOES` baixo e a lista de e-mails curta. No plano pago, configure um orçamento com alerta no Google Cloud. Se a chave vazar, revogue no AI Studio e gere outra.
+Cota da chave. Todos os usuários usam a mesma chave, então um usuário autorizado pode esgotar a cota diária do plano gratuito para todo mundo. Mantenha `MAX_AVALIACOES` baixo e a lista de e-mails curta. A aba Analista usa de 3 a 5 chamadas por pergunta; no plano gratuito, isso esgota a cota diária depois de poucas perguntas. No plano pago, configure um orçamento com alerta no Google Cloud. Se a chave vazar, revogue no AI Studio e gere outra.
 
 Privacidade. No plano gratuito do Gemini, o Google pode usar o conteúdo enviado para melhorar seus produtos; para avaliações reais de clientes, prefira o plano pago (ver [dados-e-privacidade.md](dados-e-privacidade.md)). Deixe a anonimização ligada, sabendo que ela não pega tudo. O app não grava os arquivos enviados, que ficam só na memória da sessão, mas o servidor é do Streamlit e fica fora do Brasil; os donos de negócio precisam saber disso. Com o login Google, o Streamlit recebe o nome e o e-mail de quem entra. Ainda não há separação de dados por negócio (isso é da Fase 2), então cada sessão deve ser usada para um negócio só.
 

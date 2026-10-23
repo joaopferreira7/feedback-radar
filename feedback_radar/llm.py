@@ -68,6 +68,20 @@ class ClienteGemini:
             tokens_saida=saida,
         )
 
+    def embeddings(self, textos: list[str], tipo: str = "RETRIEVAL_DOCUMENT") -> list[list[float]]:
+        """Transforma textos em vetores. tipo: RETRIEVAL_DOCUMENT (avaliações) ou RETRIEVAL_QUERY (pergunta)."""
+        from google.genai import types
+
+        vetores = []
+        for i in range(0, len(textos), 100):  # a API aceita até 100 textos por chamada
+            resposta = self._cliente.models.embed_content(
+                model=config.GEMINI_MODELO_EMBEDDING,
+                contents=textos[i:i + 100],
+                config=types.EmbedContentConfig(task_type=tipo),
+            )
+            vetores += [e.values for e in resposta.embeddings]
+        return vetores
+
 
 # ---------------------------------------------------------------------------
 # Provedor simulado (sem IA)
@@ -141,6 +155,37 @@ _ACOES_PADRAO = {
 }
 
 
+_PALAVRAS_PROBLEMA = ["reclam", "problema", "ruim", "negativ", "pior", "critic", "melhorar", "insatisf",
+                      "irrit"]
+
+
+def _passo_agente_simulado(dados: dict) -> dict:
+    """Roteiro fixo do agente sem IA: busca, conta e responde com os números encontrados."""
+    pergunta = _sem_acento(dados["pergunta"])
+    passos = dados["passos"]
+    feitos = [p.get("ferramenta") for p in passos]
+    sentimento = "negativo" if any(p in pergunta for p in _PALAVRAS_PROBLEMA) else None
+    tema = next((t for t, palavras in _PALAVRAS_TEMA.items() if any(p in pergunta for p in palavras)), None)
+    filtros = {k: v for k, v in {"sentimento": sentimento, "tema": tema}.items() if v}
+
+    if "buscar_avaliacoes" not in feitos and dados["restantes"] > 1:
+        return {"pensamento": "Ler avaliações sobre o assunto da pergunta.", "acao": "ferramenta",
+                "ferramenta": "buscar_avaliacoes", "argumentos": {"consulta": dados["pergunta"], **filtros, "n": 5}}
+    if "contar" not in feitos and dados["restantes"] > 1:
+        argumentos = {"agrupar_por": "sentimento", "tema": tema} if tema else {"agrupar_por": "tema", **filtros}
+        return {"pensamento": "Contar para saber o tamanho do problema.", "acao": "ferramenta",
+                "ferramenta": "contar", "argumentos": argumentos}
+
+    resultados = {p.get("ferramenta"): p.get("resultado") or {} for p in passos}
+    busca, contagem = resultados.get("buscar_avaliacoes", {}), resultados.get("contar", {})
+    grupos = ", ".join(f"{k}: {v}" for k, v in list(contagem.get("grupos", {}).items())[:5])
+    resposta = (f"Modo simulado (sem IA): encontrei {busca.get('encontradas', 0)} avaliações ligadas à "
+                f"pergunta, num filtro de {contagem.get('total', 0)} avaliações."
+                + (f" Contagem: {grupos}." if grupos else ""))
+    return {"pensamento": "Já tenho exemplos e números.", "acao": "responder", "resposta": resposta,
+            "citacoes": [a["id"] for a in busca.get("avaliacoes", [])][:3]}
+
+
 class ClienteSimulado:
     """Imita a interface do ClienteGemini sem chamar nenhuma API."""
 
@@ -151,6 +196,8 @@ class ClienteSimulado:
             saida = {"classificacoes": [
                 {"id": item["id"], **classificar_por_regras(item["texto"])} for item in dados_simulacao
             ]}
+        elif isinstance(dados_simulacao, dict) and dados_simulacao.get("tipo") == "agente":
+            saida = _passo_agente_simulado(dados_simulacao)
         else:  # relatório
             dados = dados_simulacao or {}
             prioridades = []

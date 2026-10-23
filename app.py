@@ -2,12 +2,14 @@
 
 Rodar com:  streamlit run app.py
 """
+import json
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
 from feedback_radar import config
+from feedback_radar.agente import criar_indice, perguntar, resumo_resultado
 from feedback_radar.classificador import ErroAPI, classificar_dataframe, estimar_custo, lista_temas
 from feedback_radar.graficos import (grafico_evolucao, grafico_matriz_confusao, grafico_sentimento,
                                      grafico_temas)
@@ -46,8 +48,8 @@ def _df() -> pd.DataFrame | None:
     return st.session_state.get("df_classificado")
 
 
-aba_dados, aba_dash, aba_rel, aba_val = st.tabs(
-    ["Dados", "Painel", "Prioridades", "Validação"])
+aba_dados, aba_dash, aba_rel, aba_ana, aba_val = st.tabs(
+    ["Dados", "Painel", "Prioridades", "Analista", "Validação"])
 
 # ---------------- Aba 1: upload e classificação ----------------
 with aba_dados:
@@ -203,7 +205,90 @@ with aba_rel:
             d2.download_button("Baixar PDF", markdown_para_pdf(md), "relatorio_prioridades.pdf",
                                "application/pdf")
 
-# ---------------- Aba 4: validação ----------------
+# ---------------- Aba 4: agente analista ----------------
+SUGESTOES = ["O que mais irrita os clientes?", "O que eles mais elogiam?",
+             "Os problemas de entrega pioraram ao longo dos meses?"]
+
+with aba_ana:
+    df = _df()
+    if df is None:
+        st.info("Nenhum arquivo classificado ainda. Comece pela aba Dados.")
+    else:
+        st.subheader("Pergunte sobre as avaliações")
+        st.caption("A IA investiga em vários passos antes de responder: busca avaliações parecidas com o "
+                   "assunto, pede contagens e comparações ao código e só então responde, citando "
+                   "avaliações reais. As contas são sempre feitas pelo código.")
+        conversa = st.session_state.setdefault("conversa", [])
+
+        for item in conversa:
+            r = item["resultado"]
+            with st.container(border=True):
+                st.markdown(f"**{item['pergunta']}**")
+                st.write(r.resposta)
+                col = "texto_enviado" if "texto_enviado" in df else "texto"
+                textos = df.set_index(df["id"].astype(int))
+                for id_ in r.citacoes:
+                    linha = textos.loc[id_]
+                    st.markdown(f"> {linha[col]}\n>\n> *avaliação {id_}, {linha['sentimento']}*")
+                if r.citacoes_rejeitadas:
+                    st.caption(f"{len(r.citacoes_rejeitadas)} citação(ões) descartada(s): a IA citou "
+                               "avaliações que não tinha lido.")
+                with st.expander(f"Como a IA chegou nisso ({len(r.passos)} passos)"):
+                    for n, passo in enumerate(r.passos, start=1):
+                        if passo.erro:
+                            st.markdown(f"**{n}.** Resposta rejeitada pelo validador: {passo.erro[:200]}")
+                        elif passo.ferramenta:
+                            st.markdown(f"**{n}.** {passo.pensamento}  \n`{passo.ferramenta}` "
+                                        f"`{json.dumps(passo.argumentos, ensure_ascii=False)}`  \n"
+                                        f"{resumo_resultado(passo.resultado)}")
+                        else:
+                            st.markdown(f"**{n}.** {passo.pensamento} Resposta final.")
+                st.caption(f"{r.chamadas} chamadas ao LLM · {r.tokens_entrada + r.tokens_saida} tokens · "
+                           f"custo estimado US$ {r.custo_estimado_usd:.4f}")
+
+        clicada = None
+        colunas = st.columns(len(SUGESTOES))
+        for coluna, sugestao in zip(colunas, SUGESTOES):
+            if coluna.button(sugestao, key=f"sugestao_{sugestao}", width="stretch"):
+                clicada = sugestao
+        with st.form("form_pergunta", clear_on_submit=True):
+            texto = st.text_input("Sua pergunta", placeholder="Ex.: por que as notas caíram em março?")
+            enviar = st.form_submit_button("Perguntar", type="primary")
+        pergunta = clicada or (texto.strip() if enviar else "")
+
+        if pergunta:
+            try:
+                cliente = criar_cliente(provedor)
+            except ErroConfiguracao as erro:
+                st.error(str(erro))
+                st.stop()
+            # O índice de busca é montado uma vez por arquivo classificado e provedor
+            chave = (provedor, id(df))
+            if st.session_state.get("indice_chave") != chave:
+                with st.spinner("Preparando a busca nas avaliações..."):
+                    st.session_state["indice"] = criar_indice(df, cliente)
+                st.session_state["indice_chave"] = chave
+            indice = st.session_state["indice"]
+            if indice.aviso:
+                st.warning(indice.aviso)
+            historico = [{"pergunta": c["pergunta"], "resposta": c["resultado"].resposta} for c in conversa]
+            with st.status("Investigando...", expanded=True) as status:
+                try:
+                    resultado = perguntar(pergunta, df, cliente, indice, historico,
+                                          ao_passo=lambda p: status.write(
+                                              f"{p.ferramenta}: {resumo_resultado(p.resultado)}"))
+                except ErroAPI as erro:
+                    status.update(label="Erro", state="error")
+                    st.error(str(erro))
+                    st.stop()
+            conversa.append({"pergunta": pergunta, "resultado": resultado})
+            st.rerun()
+
+        if conversa and st.button("Limpar conversa"):
+            st.session_state["conversa"] = []
+            st.rerun()
+
+# ---------------- Aba 5: validação ----------------
 with aba_val:
     st.subheader("Comparação com a rotulagem do grupo")
     st.markdown("Envie a planilha de rotulagem preenchida (gerada por "

@@ -64,3 +64,32 @@ class RespostaRelatorio(BaseModel):
     resumo_geral: str = Field(min_length=20)
     prioridades: list[Prioridade] = Field(min_length=1)
     pontos_fortes: list[str] = Field(default_factory=list, max_length=5)
+
+
+# ---------- Agente analista ----------
+
+class AcaoAgente(BaseModel):
+    """Um passo do agente: usar uma ferramenta ou responder."""
+    pensamento: str = ""
+    acao: Literal["ferramenta", "responder"]
+    ferramenta: str | None = None
+    argumentos: dict = Field(default_factory=dict)
+    resposta: str | None = None
+    citacoes: list[int] = Field(default_factory=list)
+
+    @field_validator("acao", mode="before")
+    @classmethod
+    def normalizar_acao(cls, valor):
+        return valor.strip().lower() if isinstance(valor, str) else valor
+
+    @field_validator("argumentos", mode="before")
+    @classmethod
+    def argumentos_vazios(cls, valor):
+        return valor or {}  # o modelo às vezes manda null
+
+    @field_validator("resposta")
+    @classmethod
+    def resposta_nao_vazia(cls, valor):
+        if valor is not None and len(valor.strip()) < 10:
+            raise ValueError("resposta vazia ou curta demais")
+        return valor

@@ -34,6 +34,8 @@ PROVEDOR_LLM = _ler("PROVEDOR_LLM", "gemini")  # "gemini" ou "simulado"
 GEMINI_API_KEY = _ler("GEMINI_API_KEY", "")
 GEMINI_MODELO = _ler("GEMINI_MODELO", "gemini-3.8-flash")
 GEMINI_DESATIVAR_RACIOCINIO = _ler("GEMINI_DESATIVAR_RACIOCINIO", "1") == "1"
+# Modelo que transforma textos em vetores (embeddings) para a busca do agente analista
+GEMINI_MODELO_EMBEDDING = _ler("GEMINI_MODELO_EMBEDDING", "gemini-embedding-001")
 
 # Quantas avaliações vão em cada chamada ao LLM
 TAMANHO_LOTE = int(_ler("TAMANHO_LOTE", "10"))
@@ -51,6 +53,8 @@ PRECO_SAIDA_1M = float(_ler("PRECO_SAIDA_1M", "3.75"))
 
 # Avaliações muito longas são cortadas (custo e foco)
 MAX_CARACTERES_TEXTO = 1000
+# Máximo de passos (chamadas ao LLM) do agente analista por pergunta
+AGENTE_MAX_PASSOS = int(_ler("AGENTE_MAX_PASSOS", "6"))
 
 # ---------------- Acesso ao app (ver docs/deploy.md) ----------------
 # Senha simples, usada quando o login com Google (seção [auth]) não está configurado

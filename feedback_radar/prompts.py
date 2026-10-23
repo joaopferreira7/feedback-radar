@@ -8,7 +8,7 @@ Decisões de design (detalhadas em docs/etapa-2-taxonomia-e-prompt.md):
 """
 import json
 
-from .taxonomia import taxonomia_em_texto
+from .taxonomia import TEMAS_VALIDOS, taxonomia_em_texto
 
 _SISTEMA_CLASSIFICACAO = """Você é um analista de experiência do cliente especializado em pequenos negócios brasileiros (restaurantes, lanchonetes, lojas e delivery). Sua tarefa é classificar avaliações de clientes escritas em português do Brasil, que podem conter gírias, abreviações, emojis, erros de digitação e ironia.
 
@@ -103,3 +103,58 @@ def montar_prompt_relatorio(dados: dict, erro_anterior: str | None = None) -> st
         )
     partes.append("DADOS:\n" + json.dumps(dados, ensure_ascii=False, indent=1))
     return "\n\n".join(partes)
+
+
+# ---------- Agente analista ----------
+
+_SISTEMA_AGENTE = """Você é um analista de experiência do cliente que ajuda o dono de um pequeno negócio brasileiro a entender as avaliações dos clientes. As avaliações já foram classificadas (sentimento, temas, intensidade de 1 a 5).
+
+Você NÃO vê as avaliações diretamente. Para responder, investigue usando as ferramentas abaixo, uma por vez. A cada mensagem você recebe a pergunta, o que já investigou e os resultados; então decide o próximo passo: usar mais uma ferramenta ou responder.
+
+FERRAMENTAS:
+- "buscar_avaliacoes": busca as avaliações mais parecidas com um assunto (busca por significado).
+  argumentos: {"consulta": "texto livre", "sentimento": opcional, "tema": opcional, "data_inicio": opcional, "data_fim": opcional, "n": opcional (1 a 15, padrão 8)}
+- "contar": conta avaliações agrupadas por "sentimento", "tema", "mes", "fonte" ou "nota", com filtros opcionais. Também devolve a nota média.
+  argumentos: {"agrupar_por": "...", "sentimento": opcional, "tema": opcional, "data_inicio": opcional, "data_fim": opcional}
+- "ranking_impacto": temas ordenados por impacto (frequência × % negativas × intensidade). Use para "o que devo melhorar primeiro".
+  argumentos: {"data_inicio": opcional, "data_fim": opcional}
+- "comparar_periodos": compara dois períodos (total, % de cada sentimento, nota média e negativas por tema).
+  argumentos: {"inicio_a": "AAAA-MM-DD", "fim_a": "AAAA-MM-DD", "inicio_b": "AAAA-MM-DD", "fim_b": "AAAA-MM-DD"}
+
+Valores aceitos: sentimento = "positivo", "neutro" ou "negativo"; tema = <<TEMAS>>; datas no formato AAAA-MM-DD.
+
+REGRAS:
+1. Todo número da resposta deve vir de um resultado de ferramenta. Não faça contas de cabeça além de comparações simples.
+2. Antes de afirmar o que os clientes dizem sobre algo, leia avaliações reais com "buscar_avaliacoes".
+3. Em "citacoes", liste de 1 a 5 ids de avaliações que apareceram nos resultados e sustentam a resposta. NUNCA invente ids.
+4. Se os dados não respondem à pergunta (ex.: não há datas, ou o assunto não aparece), diga isso com clareza em vez de supor.
+5. Se uma ferramenta devolver "erro", corrija os argumentos e tente de novo.
+6. Seja eficiente: normalmente 2 a 4 ferramentas bastam. Não repita a mesma chamada.
+7. A resposta final é para o dono do negócio: português simples, direto, até 150 palavras, terminando com 1 ou 2 sugestões práticas quando fizer sentido. Não cite ids no texto (eles aparecem separados).
+8. Responda SOMENTE com um objeto JSON, sem markdown, em um destes formatos:
+{"pensamento": "por que este passo", "acao": "ferramenta", "ferramenta": "nome", "argumentos": {...}}
+{"pensamento": "por que já dá para responder", "acao": "responder", "resposta": "texto para o dono", "citacoes": [1, 2]}"""
+
+SISTEMA_AGENTE = _SISTEMA_AGENTE.replace("<<TEMAS>>", ", ".join(f'"{t}"' for t in TEMAS_VALIDOS))
+
+
+def montar_prompt_agente(pergunta: str, visao_geral: dict, passos: list[dict], historico: list[dict],
+                         passos_restantes: int, erro_anterior: str | None = None) -> str:
+    """passos: [{"pensamento", "ferramenta", "argumentos", "resultado"}] já executados nesta pergunta.
+    historico: perguntas e respostas anteriores da conversa, para perguntas de continuação."""
+    partes = ["VISÃO GERAL DOS DADOS:\n" + json.dumps(visao_geral, ensure_ascii=False)]
+    if historico:
+        partes.append("CONVERSA ANTERIOR:\n" + "\n".join(
+            f"Dono: {h['pergunta']}\nAnalista: {h['resposta']}" for h in historico))
+    partes.append(f"PERGUNTA DO DONO: {pergunta}")
+    if passos:
+        partes.append("INVESTIGAÇÃO ATÉ AGORA:\n" + "\n".join(
+            f"{i}. {json.dumps(p, ensure_ascii=False)}" for i, p in enumerate(passos, start=1)))
+    if passos_restantes <= 1:
+        partes.append("ESTE É O ÚLTIMO PASSO: responda agora (acao \"responder\") com o que já foi encontrado.")
+    else:
+        partes.append(f"Você ainda pode dar {passos_restantes} passos.")
+    if erro_anterior:
+        partes.append(f"ATENÇÃO: sua resposta anterior foi rejeitada: {erro_anterior[:500]}. Corrija.")
+    return "\n\n".join(partes)
+
