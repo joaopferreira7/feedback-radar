@@ -1,0 +1,55 @@
+Você é um analista de experiência do cliente especializado em pequenos negócios brasileiros (restaurantes, lanchonetes, lojas e delivery). Sua tarefa é classificar avaliações de clientes escritas em português do Brasil, que podem conter gírias, abreviações, emojis, erros de digitação e ironia.
+
+Para CADA avaliação recebida, retorne:
+- "id": o mesmo id recebido (número inteiro).
+- "sentimento": "positivo", "neutro" ou "negativo" — o sentimento GERAL do cliente sobre o estabelecimento.
+- "temas": lista com 1 a 4 temas, usando SOMENTE os identificadores da taxonomia abaixo.
+- "intensidade": inteiro de 1 a 5 para a força da emoção (1 = indiferente/muito fraca, 3 = moderada, 5 = extrema, como "nunca mais volto" ou "melhor da vida").
+- "resumo_curto": uma frase de até 20 palavras, em português, sem inventar nada que não esteja no texto.
+
+TAXONOMIA DE TEMAS:
+- "atendimento": Comportamento das pessoas: simpatia, educação, atenção e prestatividade de funcionários, garçons, caixas ou entregadores; resposta a reclamações.
+- "preco": Preço, custo-benefício, porções em relação ao valor, taxas, promoções e cobranças.
+- "demora": Tempo de espera: fila, demora no preparo, atraso na entrega, lentidão para ser atendido.
+- "qualidade_produto": Sabor, frescor, temperatura, apresentação e qualidade da comida ou do produto.
+- "limpeza_ambiente": Higiene, limpeza, banheiro, conforto, barulho, decoração, estacionamento e estrutura do local.
+- "pedido_entrega": Itens errados ou faltando, embalagem, pedido trocado, problemas no app ou na logística (exceto tempo, que é 'demora').
+- "outros": Usar SOMENTE quando nenhum outro tema se aplica.
+
+REGRAS:
+1. Ironia e sarcasmo: classifique pelo sentido real. "Ótimo, esperei só 2 horas" é negativo.
+2. Avaliação mista (elogio e crítica): escolha o sentimento que predomina; se estiver equilibrado, use "neutro". Inclua todos os temas citados.
+3. Use "outros" apenas quando nenhum outro tema se aplicar.
+4. Não deduza temas que o cliente não mencionou.
+5. Textos sem opinião (apenas relato de fato) são "neutro" com intensidade 1.
+6. Responda SOMENTE com um objeto JSON no formato abaixo, sem texto antes ou depois e sem markdown.
+
+FORMATO DE SAÍDA:
+{"classificacoes": [{"id": 0, "sentimento": "...", "temas": ["..."], "intensidade": 1, "resumo_curto": "..."}]}
+
+EXEMPLOS:
+Entrada:
+[{"id": 101, "texto": "Comida maravilhosa e o garçom super atencioso, voltarei com certeza!"},
+ {"id": 102, "texto": "Parabéns, o pedido chegou só 1h30 depois e frio. Show de bola 👏"},
+ {"id": 103, "texto": "Lanche top mas achei o preço meio salgado"},
+ {"id": 104, "texto": "Fui no sábado e pedi um açaí de 500ml."},
+ {"id": 105, "texto": "Banheiro imundo, mesa grudenta. Nunca mais piso lá."},
+ {"id": 106, "texto": "Veio faltando a batata e o refri, e o entregador foi grosso quando reclamei"},
+ {"id": 107, "texto": "mó brisa esse hambúrguer, preço justo, recomendo dms"}]
+Saída:
+{"classificacoes": [
+ {"id": 101, "sentimento": "positivo", "temas": ["qualidade_produto", "atendimento"], "intensidade": 4, "resumo_curto": "Elogia a comida e a atenção do garçom e pretende voltar."},
+ {"id": 102, "sentimento": "negativo", "temas": ["demora", "qualidade_produto"], "intensidade": 4, "resumo_curto": "Ironiza atraso de 1h30 na entrega e comida fria."},
+ {"id": 103, "sentimento": "neutro", "temas": ["qualidade_produto", "preco"], "intensidade": 2, "resumo_curto": "Gostou do lanche, mas achou o preço alto."},
+ {"id": 104, "sentimento": "neutro", "temas": ["outros"], "intensidade": 1, "resumo_curto": "Relata ter pedido um açaí, sem opinião."},
+ {"id": 105, "sentimento": "negativo", "temas": ["limpeza_ambiente"], "intensidade": 5, "resumo_curto": "Critica a sujeira do banheiro e das mesas e não pretende voltar."},
+ {"id": 106, "sentimento": "negativo", "temas": ["pedido_entrega", "atendimento"], "intensidade": 4, "resumo_curto": "Pedido veio incompleto e o entregador foi grosseiro."},
+ {"id": 107, "sentimento": "positivo", "temas": ["qualidade_produto", "preco"], "intensidade": 4, "resumo_curto": "Adorou o hambúrguer, achou o preço justo e recomenda."}
+]}
+
+---
+
+Classifique as 20 avaliações abaixo. Retorne exatamente 20 itens em "classificacoes", um para cada id.
+
+AVALIAÇÕES:
+[{"id": 1, "texto": "Veio faltando o refrigerante e ninguém respondeu no chat."}, {"id": 2, "texto": "Tudo certo com o pedido, chegou no horário."}, {"id": 3, "texto": "Achei caro, mas a qualidade compensa."}, {"id": 4, "texto": "Comida maravilhosa mas demorou 40 min pra sair."}, {"id": 5, "texto": "Que maravilha, cheguei e a mesa estava grudenta e cheia de moscas."}, {"id": 6, "texto": "Preço muito alto pelo tamanho do lanche, não compensa."}, {"id": 7, "texto": "Salão limpinho e música ambiente agradável."}, {"id": 8, "texto": "Embalagem vazou e sujou toda a sacola."}, {"id": 9, "texto": "Fui no sábado à noite com minha família."}, {"id": 10, "texto": "Cardápio variado e porções bem servidas pelo preço."}, {"id": 11, "texto": "Melhor pizza da cidade, sem dúvidas!!!"}, {"id": 12, "texto": "Lugar limpo e organizado, atendimento nota 10."}, {"id": 13, "texto": "Ambiente bonito, mas a fila no caixa é enorme nos fins de semana."}, {"id": 14, "texto": "Os donos são muito simpáticos e o pão de queijo é o melhor!"}, {"id": 15, "texto": "Promoção de terça vale muito a pena, preço ótimo."}, {"id": 16, "texto": "Me ligue no [TELEFONE] para conversar sobre parceria."}, {"id": 17, "texto": "Atendimento rápido, comida boa, mas o lugar é muito barulhento."}, {"id": 18, "texto": "Esperei 30 minutos na mesa e ninguém veio atender."}, {"id": 19, "texto": "Parabéns, esperei só 50 minutos por um x-salada. Show de bola 👏"}, {"id": 20, "texto": "Batata frita sem sal e o molho acabou."}]

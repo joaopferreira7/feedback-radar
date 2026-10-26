@@ -301,7 +301,12 @@ def _chamar(cliente, prompt: str, dados_simulacao: dict):
                               "provedor 'simulado' ou ative o plano pago.") from erro
             if getattr(erro, "code", None) in (400, 401, 403, 404) or tentativa == config.MAX_TENTATIVAS:
                 raise ErroAPI(f"Erro da API: {erro}") from erro
-            espera = 30 if "429" in str(erro) or "RESOURCE_EXHAUSTED" in str(erro) else 5 * tentativa
+            if "429" in str(erro) or "RESOURCE_EXHAUSTED" in str(erro):
+                espera = 30
+            elif "503" in str(erro) or "UNAVAILABLE" in str(erro):  # sobrecarga: costuma levar mais
+                espera = 15 * 2 ** (tentativa - 1)
+            else:
+                espera = 5 * tentativa
             time.sleep(espera)
 
 

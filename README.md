@@ -97,10 +97,19 @@ feedback-radar/
 5. [Relatório de prioridades](docs/etapa-5-relatorio.md)
 6. [Validação contra rotulagem manual](docs/etapa-6-validacao.md)
 7. [Roteiro de testes e limitações](docs/etapa-7-testes-e-limitacoes.md)
-8. [Rascunho do relatório acadêmico](docs/etapa-8-relatorio-academico.md)
+8. [Rascunho do relatório acadêmico](docs/etapa-8-relatorio-academico.md) e [apêndice dos prompts](docs/apendice-prompts.md)
 9. [Agente analista](docs/etapa-9-agente-analista.md)
 
-Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) · [Do protótipo à aplicação prática](docs/aplicacao-pratica.md)
+Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) · [Do protótipo à aplicação prática](docs/aplicacao-pratica.md) · [Publicação](docs/deploy.md)
+
+## Entregas do trabalho
+
+- Aplicação publicada: https://feedback-radar-jpf.streamlit.app (acesso com senha)
+- Relatório: [rascunho](docs/etapa-8-relatorio-academico.md), com o [apêndice dos prompts](docs/apendice-prompts.md) (regenerar com `python scripts/exportar_prompts.py`)
+- Exploração e crítica das ferramentas de IA: [docs/exploracao-ferramentas.md](docs/exploracao-ferramentas.md) e `scripts/comparar_ferramentas.py`
+- Parte 2, vídeo tutorial: [roteiro](docs/parte-2-video-tutorial.md)
+
+O que ainda depende do grupo: rotular as 100 avaliações reais, rodar as comparações, preencher os trechos entre colchetes do relatório e dos slides, e gravar o vídeo.
 
 ## Avisos importantes
 
