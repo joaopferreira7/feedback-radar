@@ -26,6 +26,13 @@ class RespostaLLM:
     tokens_saida: int = 0
 
 
+def _sobrecarga(erro: Exception) -> bool:
+    """Erro temporário do lado do Google: servidor sobrecarregado (503) ou tempo limite estourado (504)."""
+    texto = f"{type(erro).__name__} {erro}".lower()
+    return getattr(erro, "code", None) in (503, 504) or "unavailable" in texto \
+        or "deadline" in texto or "timeout" in texto or "timed out" in texto
+
+
 class ClienteGemini:
     def __init__(self, api_key: str | None = None, modelo: str | None = None):
         api_key = api_key or config.GEMINI_API_KEY
@@ -37,12 +44,29 @@ class ClienteGemini:
             )
         # Import aqui dentro para o modo simulado funcionar mesmo sem a biblioteca
         from google import genai
+        from google.genai import types
 
-        self._cliente = genai.Client(api_key=api_key)
+        # Tempo limite por chamada: sem ele, um servidor sobrecarregado deixa a tela parada por minutos
+        self._cliente = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(timeout=int(config.GEMINI_TIMEOUT_SEGUNDOS * 1000)),
+        )
         self.modelo = modelo or config.GEMINI_MODELO
+        self.modelo_reserva = config.GEMINI_MODELO_RESERVA
+        self.chamadas_reserva = 0  # quantas respostas vieram do modelo reserva
         self.nome = f"Gemini ({self.modelo})"
 
     def gerar(self, sistema: str, usuario: str, dados_simulacao=None) -> RespostaLLM:
+        """Chama o modelo principal; se ele estiver sobrecarregado ou lento, tenta o reserva."""
+        try:
+            return self._gerar(self.modelo, sistema, usuario)
+        except Exception as erro:
+            if not self.modelo_reserva or not _sobrecarga(erro):
+                raise
+            self.chamadas_reserva += 1
+            return self._gerar(self.modelo_reserva, sistema, usuario)
+
+    def _gerar(self, modelo: str, sistema: str, usuario: str) -> RespostaLLM:
         from google.genai import types
 
         opcoes = dict(
@@ -54,7 +78,7 @@ class ClienteGemini:
             opcoes["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
 
         resposta = self._cliente.models.generate_content(
-            model=self.modelo,
+            model=modelo,
             contents=usuario,
             config=types.GenerateContentConfig(**opcoes),
         )

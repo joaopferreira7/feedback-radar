@@ -63,7 +63,8 @@ Cada pergunta usa de 3 a 5 chamadas ao modelo, e o prompt cresce a cada passo po
 
 ## Limitações
 
-- O laço completo com o Gemini real ainda não foi testado: a cota diária do plano gratuito estava esgotada no dia da implementação. Até agora foram testados a busca com embeddings reais e o laço com o cliente simulado. É preciso rodar `avaliar_agente.py` com o Gemini e preencher a planilha antes de apresentar resultados.
+- O laço completo com o Gemini real foi testado em 26/10/2026 com duas das oito perguntas, nos dados de exemplo: as duas foram respondidas, com 4 chamadas em média, nenhuma citação rejeitada e custo equivalente a US$ 0,013 no plano pago. Os números citados nas respostas batiam com o ranking calculado pelo código. Falta rodar as oito perguntas na amostra real e preencher a planilha antes de apresentar resultados.
+- No mesmo dia, o `gemini-3.8-flash` estava sobrecarregado: uma chamada trivial levou mais de três minutos. Por isso o cliente tem tempo limite por chamada (`GEMINI_TIMEOUT_SEGUNDOS`, 60 s) e um modelo reserva (`GEMINI_MODELO_RESERVA`, `gemini-3.5-flash`) que responde quando o principal falha por sobrecarga ou demora. A resposta do reserva pode ter qualidade um pouco diferente, e o custo estimado continua usando o preço do principal.
 - O modelo pode escolher ferramentas ruins ou parar cedo demais. O limite de passos evita laços infinitos, mas não garante a melhor investigação.
 - A busca devolve no máximo 15 avaliações por chamada. Perguntas sobre "todas as avaliações" dependem das contagens, não da leitura de cada uma.
 - As respostas herdam os erros da classificação: se uma avaliação foi classificada com o tema errado, os filtros por tema também erram.

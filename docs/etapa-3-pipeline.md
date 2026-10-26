@@ -36,6 +36,8 @@ flowchart TD
 | Sentimento/tema inventado | Pydantic rejeita → retry com o erro |
 | Modelo "esquece" uma avaliação do lote | conferência de ids → retry |
 | Erro de rede ou limite (HTTP 429) | espera exponencial (5 s, 10 s, 20 s; mínimo 30 s para 429) |
+| Servidor sobrecarregado (503) ou lento demais | tempo limite de 60 s por chamada; o modelo reserva (`GEMINI_MODELO_RESERVA`) responde no lugar |
+| Modelo descontinuado, chave inválida (400, 403, 404) | para na hora com mensagem clara, sem repetir |
 | Uma avaliação sempre falha | divisão do lote isola o problema; as outras são salvas |
 
 ## Controle de custo e tempo
