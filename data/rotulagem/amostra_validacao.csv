@@ -1,44 +1,101 @@
 ﻿id,texto,data,nota,fonte
-1,Veio faltando o refrigerante e ninguém respondeu no chat.,2026-01-20,1.0,iFood
-2,"Tudo certo com o pedido, chegou no horário.",2026-03-06,4.0,iFood
-3,"Achei caro, mas a qualidade compensa.",2026-02-17,4.0,Google
-4,Comida maravilhosa mas demorou 40 min pra sair.,2026-02-12,3.0,Google
-5,"Que maravilha, cheguei e a mesa estava grudenta e cheia de moscas.",2026-01-28,1.0,Google
-6,"Preço muito alto pelo tamanho do lanche, não compensa.",2026-01-08,2.0,Google
-7,Salão limpinho e música ambiente agradável.,2026-03-16,5.0,Google
-8,Embalagem vazou e sujou toda a sacola.,2026-03-12,2.0,iFood
-9,Fui no sábado à noite com minha família.,2026-01-17,,Google
-10,Cardápio variado e porções bem servidas pelo preço.,2026-03-10,5.0,Google
-11,"Melhor pizza da cidade, sem dúvidas!!!",2026-01-22,5.0,Instagram
-12,"Lugar limpo e organizado, atendimento nota 10.",2026-02-08,5.0,Google
-13,"Ambiente bonito, mas a fila no caixa é enorme nos fins de semana.",2026-02-05,3.0,Google
-14,Os donos são muito simpáticos e o pão de queijo é o melhor!,2026-02-15,5.0,Google
-15,"Promoção de terça vale muito a pena, preço ótimo.",2026-03-02,5.0,Instagram
-16,Me ligue no [TELEFONE] para conversar sobre parceria.,2026-02-06,,Instagram
-17,"Atendimento rápido, comida boa, mas o lugar é muito barulhento.",2026-01-18,4.0,Google
-18,Esperei 30 minutos na mesa e ninguém veio atender.,2026-03-04,1.0,Google
-19,"Parabéns, esperei só 50 minutos por um x-salada. Show de bola 👏",2026-01-10,1.0,Google
-20,Batata frita sem sal e o molho acabou.,2026-03-27,2.0,iFood
-21,O suco veio aguado e a coxinha fria.,2026-02-03,2.0,iFood
-22,"Gostei, mas achei a porção pequena.",2026-03-29,3.0,Google
-23,"Cobraram a taxa de serviço sem avisar, achei desonesto.",2026-02-10,1.0,Google
-24,"Entrega super rápida e embalagem caprichada, parabéns à equipe!",2026-02-01,5.0,iFood
-25,"top demais, atendimento brabo e lanche monstro",2026-03-25,5.0,Instagram
-26,"Ótimo atendimento, só que não. Fui ignorado no balcão.",2026-03-08,1.0,Google
-27,Pedi sem cebola e veio com cebola. De novo.,2026-01-15,2.0,iFood
-28,Estacionamento difícil e o ar-condicionado não funcionava.,2026-02-19,2.0,Google
-29,"Hambúrguer muito saboroso e chegou quentinho, recomendo!",2026-01-03,5.0,iFood
-30,"O entregador foi educado, mas o lanche veio amassado.",2026-02-23,3.0,iFood
-31,"Demora absurda no delivery, 1h20 de espera, e o motoboy ainda reclamou da gorjeta.",2026-03-20,1.0,iFood
-32,"zuado demais, pedido trocado e frio",2026-02-14,1.0,iFood
-33,"O garçom [NOME] super atencioso, ambiente agradável.",2026-01-07,5.0,Google
-34,"A comida estava ok, o atendimento que deixou a desejar.",2026-03-14,2.0,Google
-35,A atendente foi grossa quando perguntei sobre o cardápio.,2026-01-24,1.0,Google
-36,Banheiro sujo e sem papel. Comida ok.,2026-01-12,2.0,Google
-37,Nunca mais peço aí. Carne crua no hambúrguer.,2026-02-25,1.0,iFood
-38,Bom.,2026-02-27,4.0,Google
-39,"Preço subiu muito de um mês pro outro, o lanche continua o mesmo.",2026-03-23,2.0,Google
-40,"Lanche bom, preço razoável. Nada de especial.",2026-01-26,3.0,Google
-41,"Pastel crocante e recheado, voltarei com certeza.",2026-02-21,5.0,iFood
-42,"mó brisa esse açaí, preço justo, recomendo dms",2026-01-14,5.0,Instagram
-43,Demorou mais de uma hora pra chegar e a batata veio murcha.,2026-01-05,2.0,iFood
+1,"Entrega rápida, produto compatível com o preço,mas uma panela veio riscada dentro, deixando a peça com aparência ruim.",2018-04-12,2,b2w
+2,Meu produto veio com a cor diferente. Comprei sabendo que seria aquele rosa claro que tá mostrando e veio rosa Pink. Também veio faltando a bolsa. Quando vcs vão me enviar a bolsa?,2018-04-03,2,b2w
+3,"Horrível não recomendo americanas a ninguém,pois não me retornaram o e-mail e nada. Fiz o pagamento quando chegou na minha casa o produto estava gasto,riscado,sujo,com cola  Simplesmente não era igual o anuncio,parecia até que estava usado que simplesmente colocaram na caixa e me entregaram",2018-04-11,1,b2w
+4,"O depilador é ótimo, ergonômico, leve e não dói. Funcionou muito bem para mim. Super recomendo pela relação custo benefício!",2018-02-18,4,b2w
+5,Alongador atendeu perfeitamente. Proporcionou maior conforto,2018-05-31,5,b2w
+6,"Gostei bastante, chegou bem antes do previsto!o preço estava ótimo,alisa bem os cabelos, minha filha adorou,gosto muito de comprar nas Americanas!",2018-03-15,3,b2w
+7,Adorei...muito bem acabado e bonito...entrega bem rápida...,2018-01-30,5,b2w
+8,Produto bom e barato. Proporciona uma boa impressão - não idêntica à original -  a um custo baixo.,2018-04-27,4,b2w
+9,"Não posso avaliar, porque infelizmente a entrega de vocês é péssima, e ainda não recebi o produto. Pior! Não recebo satisfação, do que esta acontecendo. Me sentido lesado...",2018-01-10,1,b2w
+10,"Muito bom recomendo a todos, fácil instalação e água realmente gelada.",2018-03-19,3,b2w
+11,"muito bom de comunicação, chega antes do prazo e em perfeitas condições.",2018-03-15,4,b2w
+12,Produto e entrega no prazo espero q continue assim,2018-03-18,3,b2w
+13,"péssimo produto, os botões ficar falhando e o frete é caro, não gaste seu dinheiro com essa porcaria!!",2018-05-10,1,b2w
+14,"Maravilhosa desliza super bem , é bivolt esquenta super rápido quem comprar não vai se arrepender",2018-04-14,5,b2w
+15,Fiz a compra há quase 2 meses e ainda não foi entregue. Espero que não venha com nenhum problema pra valer a pena.,2018-05-08,2,b2w
+16,Comprei a philco 20 polegada o controle vem c smart mas nao funciona o smart o q faço?qr aproveitar o YouTube.,2018-01-15,3,b2w
+17,"Muito bom, 100% satisfeito, só esperava um pouco mais da bateria...",2018-01-04,4,b2w
+18,"Ótimo celular, os pontos negativos são que a câmera as vezes borra a foto e o celular esquenta quando utilizados vários aplicativos.",2018-01-18,4,b2w
+19,excelente leitura -  recomendo com certeza  Philips Yancey é um dos melhores autores  cristãos da atualidade,2018-01-30,5,b2w
+20,"O produto é excelente e a entrega foi bem antes do previsto, adorei.",2018-01-16,5,b2w
+21,Produto muito bom igual a descrição o tecido é bom a cor é igual,2018-01-05,5,b2w
+22,ELE NÃO GELA A ÁGUA. SÓ SAI ÁGUA NATURAL. GOSTARIA DE SABER SE POSSO TROCAR. O QUE FAÇO. QUERIA SABER POR QUE ESTÁ ESCRITO QUE SAI ÁGUA GELADA MAS NÃO SAI?,2018-01-11,2,b2w
+23,Caneca bonita e veio muito bem embalada. Só a qualidade da estampa que não me agradou muito,2018-01-13,3,b2w
+24,"Gostaria de opinar sobre o produto, porém a primeira entrega veio com o produto errado, solicitei a troca e estou ainda aguardando. o interessante é que comprei a mais de um mês (14/12) e nada ainda.  A crítica não é ao produto, mais para aqueles que venderam...",2018-01-16,1,b2w
+25,Exatamente igual a foto!!! Ficou lindo na minha sala. A entrega mto antes do prazo!!!!,2018-01-07,5,b2w
+26,"O aparelho é ótimo, câmera excelente tem muitas funções não deixa nada a desejar, entrega dentro do prazo , parabéns a equipe,lojas Americanas.",2018-03-26,5,b2w
+27,Porém a entrega demora muito quando comparado a outros sites.,2018-02-18,3,b2w
+28,Tamanho ideal para família pequena. Bonita e ótimo custo benefício.,2018-01-12,4,b2w
+29,"O livro é uma obra repleta de referências aos anos 80 e ao mesmo tempo uma história jovial com momentos leves e tensões que vão fazer seus olhos não descansarem. Uma das minhas melhores leituras. Recomendo.  A entrega da Americanas.com também está de parabéns. Além da rapidez, o produto chegou muito bem embalado.",2018-03-26,5,b2w
+30,"Jogo muito bom,já to zerando pela segunda vez e não travou nem se quer uma vez. Excelente",2018-03-08,5,b2w
+31,Deveria ter mais cola pq usei poucas vezes e já nao cola mais,2018-03-31,2,b2w
+32,Após pesquisar muito sobre o aparelho decidi comprar e estou muito satisfeita! Imagem e som ótimos. Entrega dentro do prazo.,2018-04-06,5,b2w
+33,vcs poderia dar mais cupus de descontos pra quem compra mais ou vale compra pra ser aceito em qlq produto  eu mesmo compro muito de voces  grato romualdo,2018-01-08,3,b2w
+34,"bom dia! o headset esta com  mal contato, não consigo entrar em contato com vcs!!",2018-03-13,2,b2w
+35,"O PRODUTO É DIFERENTE DO ORIGINAL. O cone de engate e maior, tive que usar uma arroela para dar aperto.",2018-01-26,1,b2w
+36,"Um bom celular com boa duração da bateria, fotos boas lindo design e conectá rápido ao WiFi",2018-01-10,4,b2w
+37,"Em resumo, não cumpre o que promete. Já pedi orientações para devolvê-lo. No aguardo.",2018-02-19,1,b2w
+38,"Maravilhoso, recomendo sim o produto, chegou na minha casa antes do prazo estabelecido, muito bom mesmo!",2018-01-22,5,b2w
+39,"É muito bom comprar na americanas, pois tudo vem certinho e tudo em perfeito estado.  E este produto em específico, foi entregue aqui na minha mão aqui em casa. Muito bom isso.",2018-03-04,5,b2w
+40,"Neste último produto,  a qualidade ficou à desejar.",2018-04-14,2,b2w
+41,"Comprei este kit acreditando na marca pois ela e fabricada pela Boch, so que os acessessorios são de pessima qualidade, as brocas que acompanhavam meu kit ou quebram ou entortam, as pontas da parafusadeira simplismente espanam o parafuso e quebram. Resumindo uma porcaria, não recomendo a ninguem.",2018-01-31,1,b2w
+42,"O produto veio com a caixa violada, sem o lacre da embalagem. eu não recomendo a compra pelas americanas, fora a demora na entrega o produto chegou com a violada.",2018-02-25,3,b2w
+43,"Livro mt bom, para estudantes e profissionais da fono. Com ilustrações, livro bem objetivo. Gostei bastante",2018-04-22,3,b2w
+44,"Produto de qualidade. Chegou super rápido. Tenho um Samsung S7, e comprei esse pois o outro descarrega muito rápido e esquenta as vezes. Para o dia a dia, essa é a melhor opção. A bateria dura o dia todo, usando quase todas as redes sociais. Amei meu J5 pro.",2018-04-18,5,b2w
+45,"Eu odiei meu Produto, pois veio totalmente diferente do que eu pedir, como o tecido, o mode e ate a cor, não foi a que esta mostrando na imagem do produto original. Portanto estou bem decepcionado com a loja e o site em que fiz minha primeira compra, por essa razão, não compro e nem recomendo a loja e o site.",2018-04-27,1,b2w
+46,"O celular chegou muito rápido, tem ótimo desempenho e custo-benefício.",2018-03-08,5,b2w
+47,Tudo certo conforme o anúncio. O produto chegou rápido e em perfeitas condições.,2018-04-27,5,b2w
+48,"Produto com preço bem barato, só espero não ter problemas com instalação",2018-04-04,2,b2w
+49,nao recebi produto...trocaram telefone sem mesmo notificar as  lojas AAMERICANAS essa loja nao ê recomendável Magazine Romero ...nao comprem paguei por um produto e trocaram,2018-05-27,2,b2w
+50,"Ótimas fotos, muito rápido, bom espaço, boa bateria  só vem muitos aplicativos instalados, mas dá para desativar no gerenciador.",2018-04-04,5,b2w
+51,"Lindo,muito grande,achei que era menor.Da pra usar até como cachecol.Tecido de qualidade.Recomendo.",2018-03-03,5,b2w
+52,"Comprei essa tv depois de pesquisar muito qual seria a melhor opção para acompanhar minhas series do Netflix, certamente essa é a que tem o melhor custo beneficio! O fator de vir com dois controles também é muito interessante.",2018-05-18,5,b2w
+53,Gostei bastante do produto. Já recomendo às minhas amigas,2018-03-21,4,b2w
+54,não gostei material da impressora muito frágil. cartuchos preto e colorido vieram vazios. não tive como testar por falta da tinta. não recomendo,2018-03-12,2,b2w
+55,Produto entregue no prazo.  E muito bom. ..........................,2018-03-11,4,b2w
+56,"Produto realmente original, com data de fabricação muito proxima da data de venda, encaixa perfeitamente e dura como durava a bateria original. Recomendo o vendedor.",2018-03-01,4,b2w
+57,Espanta morcegos... Mais precisa ficar ligado por uns 2 meses. Caso contrário eles voltam. Não faz barulho aos ouvidos humanos.,2018-01-28,5,b2w
+58,"Jogo bom para quem gosta de ação e aventura,............................................................................................................................................................",2018-01-12,3,b2w
+59,"Vi algumas avaliações sobre o produto reclamando de lentidão, de falta de gravador de dvd, etc. Para a finalidade que eu comprei o notebook, ele me satisfaz plenamente. Não vou usar jogos nele, nem vou usar programas de design pesados.   Para o que quero: navegar na internet, fazer compras, administrar minhas contas bancárias, ele é bem rápido e seguro. Gostei muito.",2018-04-24,5,b2w
+60,"Produto ótimo,   de acordo com o solicitado e em perfeitas condições. Entregue antes do prazo previsto.",2018-05-14,4,b2w
+61,"Recebi o produto muito,muito antes da data prevista para entrega. Recomendo.",2018-04-24,5,b2w
+62,QUERO ELOGIAR A ENTREGA QUE FOI MUITO RÁPIDA. EXCELENTE.,2018-04-16,5,b2w
+63,O preço do produto e equiparado a sua qualidade. O copo e mais frágil do que os outros modelos. Mas pelo preço que se paga e só ter cuidado que vc terá seu produto por bastante tempo.,2018-01-02,3,b2w
+64,Tive problemas no produto. Canto da mesa veio avariado e o pé da mesa veio com um modelo totalmente diferente ( veio na cor branco). Caso consiga resolver junto a empresa modifico minha opinião.,2018-01-31,1,b2w
+65,"Amei o perfume! É marcante, fixação muito boa e dura muito na pele. Produto original!",2018-03-17,5,b2w
+66,Mta demora na entrega nem recebi mais já me arrependi de ter comprado! Nunca esperei tanto uma entrega pela americnas.com,2018-02-01,1,b2w
+67,"Custo benefício, dentro do valor pago é satisfatório o que proporciona",2018-04-26,4,b2w
+68,"O Smartphone Xiaomi Redmi me surpreendeu muito, melhor do que muitos se não todos os celulares na sua faixa de preço, muito bom",2018-05-11,4,b2w
+69,A impressora Epson Ecotank L120 Colorida é excelente produto eu recomendo.,2018-05-12,5,b2w
+70,Excelente produto!! Adorei a escova alisadora mondial!!!,2018-05-14,5,b2w
+71,"livro muito bom, explica  como interagir com os bebês numa fase fundamental da vida, principalmente quando os bebês ficam longe dos pais, quando estes estão no trabalho..",2018-01-10,5,b2w
+72,"O produto deve ser bom, ""deve ser"" pois ainda nao recebi. A entrega esta atrasada. Nunca mais compro em lojas que utilizem a Directlog para entrega.",2018-03-29,3,b2w
+73,"Muito bom atendeu a todas as minhas nescessidades ,indico a todos.",2018-01-23,4,b2w
+74,"Produto branco na parte interior,  isso não foi mencionado na descrição. Possui tonalidades diferentes de uma parte para outra. Alguns quebradinhos do transportes.",2018-04-24,2,b2w
+75,Imagem perfeita. Funções de smart excepcional . superou as expectativas.,2018-05-24,5,b2w
+76,Produto muito bom pelo valor! Entrega: muito agiu foi muito bom comprar com a Americanas. Recomendo para todos!,2018-01-16,5,b2w
+77,"Ótimo produto, fácil de configurar entradas hdmi e usb bem localizadas, recomendo.",2018-04-12,4,b2w
+78,"Excelente produto! Adorando o meu ,muito eficiente !",2018-05-03,5,b2w
+79,"bateria dura bem para 3.000 mAh, celular é rápido, a câmera é boa e tem um ótimo preço. Excelente trabalho da Direct, empresa que faz a entrega. Não paguei o frete, ou seja econômica com previsão de entrega para 10 a 13 dias e o produto chegou em 7 dias úteis.",2018-04-07,5,b2w
+80,"O produto até o momento atende bem pra quem usa todo dia, porém se for encher a mochila seu tempo de uso vai diminuir. O material da mochila é bom, a alça não é muito confortável mas é resistente. Se o objetivo é usar levando notebook aconselho outro produto, o compartimento de notebook é bem ruim, a espuma é muito fina e não protege bem.",2018-05-23,3,b2w
+81,Super recomendo! Celular excelente!!!   Muito bom !!!!!!!!!!!!,2018-03-14,5,b2w
+82,"O produto não gela a água, apenas resfria, demora muito para resfriar novamente, após o uso. Não tem controle de temperatura.",2018-01-17,2,b2w
+83,"Ótimo exatamente o que eu queria optei em retirada  Loja Americanas ,chegou muito antes do previsto eu Super Recomendo este liquidificador sem contar que ele é LINDO... MUITO BOM E BATE AS FRUTAS SEM DEIXAR PEDACINHOS ....MARAVILHOS PODEM APOSTAR !",2018-01-14,5,b2w
+84,Produto muito bom Entrega rápida  Entrega no prazo determinado Recomendo a todos,2018-03-28,4,b2w
+85,Comprei 2 controles. Um deles está com problemas. Não faz a conexão com o portão de forma alguma.  O outro está tudo OK! Nem sei como resolver.,2018-05-26,3,b2w
+86,"Ótima qualidade, ótimo material, lindo .. Só veio com o pistão quebrado, não tá segurando a porta basculante ;( Mas de resto muito bom",2018-01-31,5,b2w
+87,Muito bom o celular. O único ponto negativo é o grande tempo que leva para recarregar a bateria.,2018-05-10,4,b2w
+88,"Chegou antes do prazo estimado,, esse eu recomendo. Vendedor atencioso e competente.",2018-03-17,5,b2w
+89,Muito pratico e facil de usar bom para todos os dias,2018-03-09,5,b2w
+90,"comprei no sábado e recebi na quinta, produto integro! fogão menor do que os de mesa em inox. possui chamas bem altas e forte! ainda não testei o forno , mas parece ser bom. o fogão possui um visual lindo!!! super fácil de limpar, só não sei o forno. pelo designer e poder das chamas o preço compensa. ideal para lugares e família pequena. amei...",2018-04-20,3,b2w
+91,"O produto é bom, recomendo, bom de tamanho, não toma muito espaço.",2018-01-17,3,b2w
+92,"A balança oscila muito os valores, tem uma variação de até 1 kg. Para que quer acompanhar o peso não compensa.",2018-03-10,1,b2w
+93,"Atendeu bem as minhas expectativas, custo benefício ótimo!! compro de novo se precisar.",2018-02-24,4,b2w
+94,"Pensei que o produto fosse original e não é, péssimo material já sou a tampa do fone em 1 semana.",2018-03-30,1,b2w
+95,"Muito bom o aparelho e boa potencia, recomendo o aparelho.",2018-02-25,4,b2w
+96,Fiquei impressionado com o ruído baixo e a potencia. Além de ser linda.,2018-04-02,5,b2w
+97,"Ar condicionado silencioso, resfria bem, atendeu as minhas expectativas.",2018-03-08,4,b2w
+98,"Maravilhoso, veste muito bem. Uso 48 ficou perfeito.",2018-05-09,4,b2w
+99,"Fiz o pedido dia (23-04-2018), antes de confirmar a compra, estava explicito no site, que vocês iriam entregar de 7 á 10 dias úteis, e bem, hoje já é dia (27-04-2018), já se passou exata uma semana do lançamento e até hoje, ainda está na nota fiscal emitida, detalhe: desde segunda-feira passada, dia ( 23-04-2018). Depois da efetuação do pedido, a data foi postergada para dia (30-04-2018), passados 3-4 dias, a Americanas me adia novamente a data de entrega, para até agora, dia (02-04-2018).  Comprei na pré-venda, com a certeza de pegar o jogo o quanto antes possível, bem perto de seu lançamento, mas até hoje estou esperando e quero saber Americanas, quanto tempo a mais terei que esperar?  Se vocês oferecem para seus clientes o serviço de pré-venda e não cumprem com a palavra, vocês não estão respeitando as pessoas que são fundamentais para a sustentação e para o crescimento da Americanas, que são seus clientes.",2018-04-27,1,b2w
+100,"O produto é de fato o que eu esperava que ele fosse,cumpre tudo o que está descrito em sua ""ficha técnica"" e atende todas as minhas expectativas...",2018-01-19,5,b2w

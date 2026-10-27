@@ -69,16 +69,58 @@ Limitações observadas neste projeto, todas registradas no histórico:
 
 Registrem aqui os casos em que o grupo discordou de uma sugestão do Claude Code ou mudou algo que ele gerou (por exemplo, o pedido de um visual mais sóbrio, sem emojis). Esses casos mostram a participação humana e enriquecem a visão crítica.
 
+## Resultados da Atividade 1 (coletados em 27/10/2026)
+
+As respostas estão em `data/exploracao/respostas/`, com o registro de como foram coletadas em `LEIA-ANTES.md`. A coleta foi feita pelo Claude Code no navegador de um integrante, com autorização dele; isso deve constar no relatório. As 20 avaliações são as primeiras da amostra real do B2W-Reviews01 (avaliações de produtos da Americanas).
+
+Fontes comparadas: ChatGPT (conta gratuita, modelo padrão), ChatGPT de novo numa segunda conversa, Claude (conta Pro, Opus 5.5, que não é a versão gratuita), Gemini web (conta gratuita, modo automático), a nossa aplicação pela API (`gemini-3.5-flash-lite`, ver abaixo) e a linha de base por palavras-chave.
+
+Todas as ferramentas devolveram as 20 classificações em JSON válido e dentro da taxonomia. Nenhuma precisou de correção.
+
+Concordância de sentimento entre as fontes (proporção das 20 avaliações com o mesmo rótulo):
+
+| | ChatGPT | ChatGPT (2ª vez) | Claude | Gemini web | Aplicação | Regras |
+|---|---|---|---|---|---|---|
+| ChatGPT | 1,00 | 0,95 | 1,00 | 1,00 | 0,95 | 0,75 |
+| Claude | 1,00 | 0,95 | 1,00 | 1,00 | 0,95 | 0,75 |
+| Gemini web | 1,00 | 0,95 | 1,00 | 1,00 | 0,95 | 0,75 |
+| Aplicação | 0,95 | 1,00 | 0,95 | 0,95 | 1,00 | 0,80 |
+
+Nos temas, a concordância entre as IAs ficou entre 0,83 e 0,94 (Jaccard médio); entre qualquer IA e a linha de base, entre 0,25 e 0,31.
+
+O que isso mostra, antes mesmo do gabarito humano:
+
+- Nesta tarefa, os modelos de linguagem são quase intercambiáveis: concordam entre si em 19 ou 20 das 20 avaliações. A linha de base por palavras-chave discorda deles em um quarto dos casos, sobretudo em avaliações sem palavras de emoção explícitas, como "Fiz a compra há quase 2 meses e ainda não foi entregue".
+- A única avaliação que dividiu as IAs foi a mista: "Entrega rápida, produto compatível com o preço, mas uma panela veio riscada". ChatGPT, Claude e Gemini web disseram neutro; a aplicação e a segunda conversa do ChatGPT disseram negativo. É exatamente o tipo de caso que a regra 2 do prompt tenta resolver e que continua ambíguo.
+- O mesmo ChatGPT, em duas conversas novas, mudou o sentimento de 1 avaliação e os temas de 3. Sem controle de temperatura, o chat não é reprodutível; a aplicação usa temperatura zero.
+- Concordar não é acertar: todas podem errar do mesmo jeito. A acurácia só pode ser medida com o gabarito do grupo (`comparar_ferramentas.py comparar`).
+- As 20 primeiras avaliações são relativamente fáceis (opiniões claras sobre produto e entrega). A amostra completa de 100 deve ter mais casos difíceis.
+
+Conclusão provisória para a pergunta da atividade: um chat classifica tão bem quanto a aplicação, mas só funciona colando e copiando lotes pequenos à mão, sem validação automática, sem repetibilidade e sem painel ou histórico. O valor da aplicação está no processo em volta do modelo, não no modelo.
+
+### Episódio com o modelo principal
+
+Na mesma noite, o `gemini-3.8-flash` (o modelo principal da aplicação) ficou sobrecarregado: chamadas triviais levavam até três minutos, e a classificação das 100 avaliações não terminou em 40 minutos. Depois, a cota diária gratuita do `gemini-3.5-flash` acabou. A amostra foi classificada com o `gemini-3.5-flash-lite`, que tem cota própria, em 88 segundos (10 chamadas, nenhuma nova tentativa). Por isso:
+
+- o modelo reserva padrão passou a ser o `gemini-3.5-flash-lite` (mais barato: US$ 0,30 e US$ 2,50 por milhão de tokens);
+- a classificação agora para na hora quando a cota diária acaba, guarda o que já foi feito e pode ser retomada com `--continuar`;
+- falta classificar a amostra também com o `gemini-3.8-flash` quando a cota voltar, para comparar os dois modelos com o gabarito:
+
+  ```bash
+  python scripts/classificar_cli.py data/rotulagem/amostra_validacao.csv --sim --saida saidas/amostra_classificada_flash.csv
+  ```
+
 ## Tabela para o relatório
 
 Preencham depois das atividades. Os números vêm de `saidas/exploracao_ferramentas.csv`.
 
 | Ferramenta | Papel no projeto | Acurácia (20 avaliações) | Formato correto? | Ponto forte | Limitação principal |
 |---|---|---|---|---|---|
-| Gemini 3.8 Flash (API) | classificação, relatório e agente na aplicação | | | | |
-| ChatGPT (web) | comparação | | | | |
-| Claude (web) | comparação | | | | |
-| Gemini (web) | comparação | | | | |
+| Gemini 3.8 Flash (API) | classificação, relatório e agente na aplicação | | sim (validado pelo código) | | sobrecarga e cota baixa no plano gratuito |
+| Gemini 3.5 Flash-Lite (API) | modelo reserva; classificou a amostra | | sim | rápido, barato, cota própria | |
+| ChatGPT (web) | comparação | | sim | | mudou 1 sentimento e 3 temas numa segunda conversa |
+| Claude (web, Opus 5.5) | comparação | | sim | | versão paga, não comparável às gratuitas |
+| Gemini (web) | comparação | | sim | | |
 | Dify ou Flowise | protótipo sem código | | | | |
 | Claude Code | desenvolvimento | não se aplica | não se aplica | | |
 | Google AI Studio | chave de API e teste de prompts | não se aplica | não se aplica | | |

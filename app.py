@@ -126,6 +126,10 @@ with aba_dados:
                 f"{stats.chamadas} chamadas · {stats.retries} retries · "
                 f"{stats.tokens_entrada + stats.tokens_saida} tokens · "
                 f"custo estimado US$ {stats.custo_estimado_usd:.4f} · {stats.segundos:.0f}s de API")
+            if stats.interrompido:
+                st.warning(stats.interrompido + " As avaliações que faltaram estão com status 'erro'. "
+                           "Para completá-las sem refazer as outras, use "
+                           "`python scripts/classificar_cli.py ... --continuar`.")
             if stats.erros:
                 with st.expander(f"Ver {len(stats.erros)} erro(s) registrados"):
                     st.code("\n".join(stats.erros))

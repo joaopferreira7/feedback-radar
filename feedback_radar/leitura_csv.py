@@ -117,7 +117,11 @@ def ler_csv(arquivo) -> tuple[pd.DataFrame, list[str]]:
         df["nota"] = notas.where(notas.between(1, 5))
 
     if "data" in df.columns:
-        datas = pd.to_datetime(df["data"], errors="coerce", dayfirst=True, format="mixed")
+        # ISO (2018-04-12, como o próprio app exporta) é ano-mês-dia; o resto é tratado como
+        # dia/mês/ano, o padrão brasileiro. Usar dayfirst no ISO transformaria 12/abr em 4/dez.
+        texto_datas = df["data"].dropna().astype(str).str.strip()
+        iso = len(texto_datas) > 0 and texto_datas.str.match(r"^\d{4}-\d{2}-\d{2}").all()
+        datas = pd.to_datetime(df["data"], errors="coerce", dayfirst=not iso, format="mixed")
         invalidas = (datas.isna() & df["data"].notna()).sum()
         if invalidas:
             avisos.append(f"{invalidas} data(s) inválida(s) foram ignoradas.")

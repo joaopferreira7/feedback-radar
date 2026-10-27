@@ -11,6 +11,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # permite importar feedback_radar
 
+import pandas as pd  # noqa: E402
+
 from feedback_radar import config  # noqa: E402
 from feedback_radar.classificador import classificar_dataframe, estimar_custo  # noqa: E402
 from feedback_radar.leitura_csv import ler_csv  # noqa: E402
@@ -28,6 +30,8 @@ def main():
     p.add_argument("--sem-anonimizar", action="store_true")
     p.add_argument("--relatorio", help="gera também o relatório (.md; cria um .pdf ao lado)")
     p.add_argument("--sim", action="store_true", help="não pedir confirmação do custo")
+    p.add_argument("--continuar", action="store_true",
+                   help="se --saida já existe, classifica só o que faltou (ex.: depois de acabar a cota)")
     args = p.parse_args()
 
     df, avisos = ler_csv(args.entrada)
@@ -43,11 +47,29 @@ def main():
     if args.provedor == "gemini" and not args.sim and input("Continuar? [s/N] ").lower() != "s":
         return
 
+    # --continuar: reaproveita o que já foi classificado numa execução anterior
+    anteriores = pd.DataFrame()
+    if args.continuar and Path(args.saida).exists():
+        anteriores = pd.read_csv(args.saida, encoding="utf-8-sig")
+        anteriores = anteriores[anteriores["status"] == "ok"]
+        df = df[~df["id"].isin(anteriores["id"])]
+        print(f"Continuando: {len(anteriores)} já classificadas, faltam {len(df)}.")
+        if df.empty:
+            return
+
     cliente = criar_cliente(args.provedor)
     resultado, stats = classificar_dataframe(
         df, cliente, args.lote, anonimizar_textos=not args.sem_anonimizar,
         ao_progredir=lambda f: print(f"\r{f:.0%}", end="", flush=True))
     print()
+    resultado["modelo"] = cliente.nome  # útil quando a amostra é classificada em dias/modelos diferentes
+    if getattr(cliente, "chamadas_reserva", 0):
+        print(f"AVISO: {cliente.chamadas_reserva} chamada(s) respondidas pelo modelo reserva "
+              f"({cliente.modelo_reserva}).")
+    if stats.interrompido:
+        print("INTERROMPIDO:", stats.interrompido, "Use --continuar para retomar.")
+    if not anteriores.empty:
+        resultado = pd.concat([anteriores, resultado], ignore_index=True).sort_values("id")
 
     Path(args.saida).parent.mkdir(parents=True, exist_ok=True)
     resultado.to_csv(args.saida, index=False, encoding="utf-8-sig")

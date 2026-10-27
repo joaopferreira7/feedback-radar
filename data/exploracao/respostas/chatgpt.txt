@@ -1,0 +1,144 @@
+{
+  "classificacoes": [
+    {
+      "id": 1,
+      "sentimento": "neutro",
+      "temas": ["qualidade_produto", "preco", "demora"],
+      "intensidade": 2,
+      "resumo_curto": "Elogia a rapidez da entrega e o preço, mas reclama de uma panela riscada."
+    },
+    {
+      "id": 2,
+      "sentimento": "negativo",
+      "temas": ["qualidade_produto", "pedido_entrega"],
+      "intensidade": 4,
+      "resumo_curto": "Recebeu o produto em uma cor diferente da anunciada e sem a bolsa."
+    },
+    {
+      "id": 3,
+      "sentimento": "negativo",
+      "temas": ["atendimento", "qualidade_produto", "pedido_entrega"],
+      "intensidade": 5,
+      "resumo_curto": "Reclama da falta de retorno por e-mail e de um produto sujo, riscado e diferente do anúncio."
+    },
+    {
+      "id": 4,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto", "preco"],
+      "intensidade": 4,
+      "resumo_curto": "Elogia o depilador por ser confortável, eficiente e ter boa relação custo-benefício."
+    },
+    {
+      "id": 5,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 3,
+      "resumo_curto": "Afirma que o alongador atendeu às expectativas e proporcionou mais conforto."
+    },
+    {
+      "id": 6,
+      "sentimento": "positivo",
+      "temas": ["demora", "preco", "qualidade_produto"],
+      "intensidade": 5,
+      "resumo_curto": "Elogia o preço, a eficiência do produto e a entrega antecipada, demonstrando satisfação com a loja."
+    },
+    {
+      "id": 7,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto", "demora"],
+      "intensidade": 4,
+      "resumo_curto": "Adorou o acabamento e a aparência do produto e elogiou a rapidez da entrega."
+    },
+    {
+      "id": 8,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto", "preco"],
+      "intensidade": 3,
+      "resumo_curto": "Considera o produto bom e barato, embora não seja idêntico ao original."
+    },
+    {
+      "id": 9,
+      "sentimento": "negativo",
+      "temas": ["demora", "pedido_entrega", "atendimento"],
+      "intensidade": 5,
+      "resumo_curto": "Ainda não recebeu o produto e critica a entrega e a falta de informações sobre o atraso."
+    },
+    {
+      "id": 10,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 4,
+      "resumo_curto": "Recomenda o produto, destacando a instalação fácil e a água realmente gelada."
+    },
+    {
+      "id": 11,
+      "sentimento": "positivo",
+      "temas": ["atendimento", "demora", "qualidade_produto"],
+      "intensidade": 4,
+      "resumo_curto": "Elogia a comunicação, a entrega antecipada e o recebimento do produto em perfeitas condições."
+    },
+    {
+      "id": 12,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto", "demora"],
+      "intensidade": 2,
+      "resumo_curto": "Demonstra satisfação com o produto e a entrega no prazo, esperando que continue assim."
+    },
+    {
+      "id": 13,
+      "sentimento": "negativo",
+      "temas": ["qualidade_produto", "preco"],
+      "intensidade": 5,
+      "resumo_curto": "Critica os botões que falham, considera o frete caro e desaconselha a compra."
+    },
+    {
+      "id": 14,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 5,
+      "resumo_curto": "Elogia o produto por deslizar bem, ser bivolt e esquentar rapidamente, recomendando a compra."
+    },
+    {
+      "id": 15,
+      "sentimento": "negativo",
+      "temas": ["demora", "pedido_entrega"],
+      "intensidade": 4,
+      "resumo_curto": "Reclama que a compra ainda não foi entregue após quase dois meses e teme problemas no produto."
+    },
+    {
+      "id": 16,
+      "sentimento": "negativo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 3,
+      "resumo_curto": "Relata que a função smart do controle da televisão não funciona e pergunta como acessar o YouTube."
+    },
+    {
+      "id": 17,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 3,
+      "resumo_curto": "Está muito satisfeito com o produto, mas esperava um desempenho melhor da bateria."
+    },
+    {
+      "id": 18,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 3,
+      "resumo_curto": "Elogia o celular, mas aponta problemas na câmera e aquecimento ao utilizar vários aplicativos."
+    },
+    {
+      "id": 19,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto"],
+      "intensidade": 4,
+      "resumo_curto": "Elogia a leitura e recomenda o autor, considerado um dos melhores autores cristãos da atualidade."
+    },
+    {
+      "id": 20,
+      "sentimento": "positivo",
+      "temas": ["qualidade_produto", "demora"],
+      "intensidade": 4,
+      "resumo_curto": "Demonstra satisfação com o produto e comemora a entrega realizada antes do prazo previsto."
+    }
+  ]
+}

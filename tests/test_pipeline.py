@@ -24,6 +24,13 @@ def test_csv_ponto_e_virgula_cp1252_e_sinonimos():
     assert any("sem texto" in a for a in avisos)
 
 
+def test_datas_iso_e_brasileiras():
+    iso, _ = ler_csv(b"texto,data\nbom,2018-04-12\nruim,2018-01-05 10:30:00\n")
+    assert list(iso["data"].dt.month) == [4, 1] and list(iso["data"].dt.day) == [12, 5]
+    br, _ = ler_csv(b"texto,data\nbom,12/04/2018\nruim,05/01/2018\n")
+    assert list(br["data"].dt.month) == [4, 1] and list(br["data"].dt.day) == [12, 5]
+
+
 def test_csv_sem_coluna_texto():
     with pytest.raises(ErroValidacaoCSV, match="texto"):
         ler_csv(b"nome,nota\nAna,5\n")
@@ -89,6 +96,29 @@ def test_falha_permanente_marca_erro_sem_travar(monkeypatch):
     resultado, stats = classificar_dataframe(df, ClienteTemaInvalido(), tamanho_lote=3)
     assert (resultado["status"] == "erro").all()
     assert stats.falhas == 3  # o lote foi dividido até isolar cada avaliação
+
+
+class ClienteCotaAcaba:
+    """Responde o primeiro lote e depois simula a cota diária esgotada."""
+
+    def __init__(self):
+        self.chamadas = 0
+
+    def gerar(self, sistema, usuario, dados_simulacao=None):
+        self.chamadas += 1
+        if self.chamadas > 1:
+            raise RuntimeError("429 RESOURCE_EXHAUSTED. You exceeded your current quota "
+                               "(GenerateRequestsPerDayPerProjectPerModel-FreeTier)")
+        return ClienteSimulado().gerar(sistema, usuario, dados_simulacao)
+
+
+def test_cota_diaria_para_e_preserva_o_que_ja_foi_feito():
+    df = pd.DataFrame({"id": [1, 2, 3, 4], "texto": ["ótimo", "péssimo", "bom", "ruim"]})
+    cliente = ClienteCotaAcaba()
+    resultado, stats = classificar_dataframe(df, cliente, tamanho_lote=2)
+    assert list(resultado["status"]) == ["ok", "ok", "erro", "erro"]
+    assert "cota" in stats.interrompido
+    assert cliente.chamadas == 2  # não ficou insistindo depois da cota esgotada
 
 
 # ---------- Pipeline completo no modo simulado ----------

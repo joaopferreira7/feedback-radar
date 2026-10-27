@@ -36,6 +36,7 @@ Ferramentas de IA generativa, com a função de cada uma:
 | Google AI Studio | criação da chave de API e teste de variações de prompt |
 | Claude Code (Anthropic) | assistente de programação: gerou a primeira versão do código, dos testes e da documentação (ver 3.5) |
 | ChatGPT, Claude e Gemini (versões web) | comparação: classificaram as mesmas 20 avaliações que a aplicação (ver 3.6) |
+| Gemini 3.5 Flash-Lite (API do Google) | modelo reserva, usado quando o principal está sobrecarregado ou sem cota |
 | [Dify ou Flowise] | comparação: protótipo do classificador sem código (ver 3.6) |
 
 Bibliotecas e serviços de apoio: Python, pandas, Pydantic (validação do JSON), Streamlit e Plotly (interface e gráficos), scikit-learn (métricas e busca alternativa por TF-IDF), openpyxl (planilha de rotulagem), fpdf2 (PDF), pytest (testes), Git e GitHub, Streamlit Community Cloud (publicação) e Authlib (login Google).
@@ -85,7 +86,9 @@ O texto completo dos três prompts está no Apêndice A (`docs/apendice-prompts.
 
 ### 3.4 Dados
 
-[Descrever os dados usados: dataset público (por exemplo, amostra de N avaliações do Olist, licença CC BY-NC-SA 4.0) e, se houver, avaliações de estabelecimento local (autorização, período, quantidade, anonimização). Os dados de `data/exemplos/` são fictícios e serviram só para desenvolvimento.]
+O desenvolvimento usou 43 avaliações fictícias de uma lanchonete, escritas para cobrir casos difíceis (ironia, gíria, avaliação mista), em `data/exemplos/`. A validação usa dados reais: o B2W-Reviews01 (REAL; OSHIRO; MAFRA, 2019), conjunto público de cerca de 130 mil avaliações de produtos da Americanas, com licença CC BY-NC-SA 4.0, que permite uso acadêmico não comercial. Dele foram sorteadas 500 avaliações com semente fixa (`scripts/converter_dataset.py`) e, dessas, 100 para a rotulagem manual (`scripts/gerar_planilha_rotulagem.py`). Só o texto, a data, a nota e a fonte foram mantidos; dados do avaliador presentes no conjunto original (identificador, ano de nascimento, gênero, estado) foram descartados, e os textos passaram pela anonimização.
+
+Uma limitação deve ser declarada: o B2W é de comércio eletrônico, não de restaurantes. Os temas de entrega, prazo, qualidade do produto e preço aparecem bem; limpeza e ambiente quase não aparecem. [Se o grupo conseguir avaliações de um estabelecimento local, com autorização, descrever aqui o período, a quantidade e a anonimização.]
 
 ### 3.5 Uso de IA no desenvolvimento
 
@@ -101,7 +104,13 @@ Para garantir que o grupo domina o que entrega, [cada integrante estudou um mód
 
 ### 3.6 Exploração de outras ferramentas
 
-[Resumir os resultados de `docs/exploracao-ferramentas.md`: a tabela comparando a aplicação com ChatGPT, Claude e Gemini web nas mesmas 20 avaliações, a consistência entre duas conversas, a experiência de montar o classificador no Dify ou no Flowise e a conclusão sobre quando cada caminho vale a pena.]
+As mesmas 20 avaliações reais, com o mesmo prompt, foram classificadas pelo ChatGPT (gratuito), pelo Claude (conta Pro, Opus 5.5), pelo Gemini web (gratuito), pela aplicação via API e pela linha de base por palavras-chave. A coleta nos chats foi feita pelo Claude Code, operando o navegador de um integrante com autorização dele, em 27/10/2026.
+
+Todas as ferramentas devolveram JSON válido e dentro da taxonomia. Os modelos de linguagem concordaram entre si no sentimento em 95% a 100% das avaliações e, nos temas, com Jaccard médio entre 0,83 e 0,94. A linha de base concordou com eles em apenas 75% a 80% dos casos (Jaccard de 0,25 a 0,31 nos temas). A única avaliação que dividiu os modelos foi uma avaliação mista ("Entrega rápida, produto compatível com o preço, mas uma panela veio riscada"). O ChatGPT, repetido numa segunda conversa, mudou o sentimento de uma avaliação e os temas de três.
+
+A conclusão é que, nesta tarefa, um chat comum classifica tão bem quanto a aplicação, mas não escala (é preciso colar e copiar lotes à mão), não valida o formato, não é reprodutível e não oferece painel, relatório nem histórico. O valor da aplicação está no processo construído em volta do modelo. Concordância entre ferramentas não é acerto; a acurácia de cada uma contra o gabarito humano está em [tabela gerada por `scripts/comparar_ferramentas.py comparar`]. Os detalhes estão em `docs/exploracao-ferramentas.md`.
+
+[Atividade 2: descrever a experiência de montar o classificador no Dify ou no Flowise e quando cada caminho vale a pena.]
 
 ### 3.7 Resultados
 
@@ -119,9 +128,11 @@ Classificação de sentimento e temas (amostra de [100] avaliações rotuladas p
 
 Análise de erros: [tabela com tipo de erro (ironia, gíria, mista, curta, ambígua) e quantidade, e de três a cinco exemplos comentados com a hipótese do grupo].
 
-Agente analista (oito perguntas fixas de `scripts/avaliar_agente.py`, avaliadas por dois integrantes): [quantas respostas corretas, quantas úteis, média de chamadas por pergunta, citações rejeitadas, comportamento na pergunta sobre assunto ausente].
+Agente analista: as oito perguntas fixas de `scripts/avaliar_agente.py` foram rodadas em 27/10/2026 sobre as 100 avaliações reais, com o `gemini-3.5-flash-lite`. As oito foram respondidas, com média de 3,2 chamadas ao modelo por pergunta, nenhuma citação rejeitada e custo equivalente a US$ 0,037 no plano pago para as oito. Os números citados nas respostas foram conferidos contra os dados e estavam corretos (por exemplo, 61 das 65 avaliações positivas citam qualidade do produto; nota média de 3,57 em janeiro e 3,76 em março; 71,4% das menções a pedido e entrega são negativas). Nas três perguntas sobre assuntos ausentes (iFood, banheiro, estacionamento), o agente disse que não havia dados, em vez de inventar, mas em uma delas acrescentou uma recomendação genérica sem base nos dados. [Corretude e utilidade avaliadas por dois integrantes na planilha `resultados/avaliacao_agente_b2w.csv`: inserir.]
 
-Custo: no teste com 43 avaliações, a classificação usou cinco chamadas e duas novas tentativas por sobrecarga do servidor. No plano pago, isso equivale a cerca de US$ 0,0003 a 0,0004 por avaliação aos preços de outubro de 2026, que dobram em janeiro de 2027. [Atualizar com os números da amostra real.]
+Problemas encontrados ao rodar com dados reais e corrigidos: datas no formato ISO eram lidas como dia/mês e iam parar em meses errados (o que deixou errada a primeira rodada das perguntas sobre períodos); o limite gratuito de embeddings (100 textos por minuto) fazia a busca falhar logo depois de indexar as avaliações; e a classificação ficava insistindo depois do fim da cota diária, perdendo o que já tinha feito. Cada correção ganhou um teste automatizado.
+
+Custo e tempo: a amostra real de 100 avaliações foi classificada pelo `gemini-3.5-flash-lite` em 88 segundos, com 10 chamadas e nenhuma nova tentativa. Pelos tokens contados, o custo equivalente no plano pago é de cerca de US$ 0,0002 a 0,0004 por avaliação, conforme o modelo (preços de outubro de 2026; os do `gemini-3.8-flash` dobram em janeiro de 2027). Na mesma noite, o `gemini-3.8-flash` estava sobrecarregado e não conseguiu terminar a mesma tarefa em 40 minutos, o que levou à criação do tempo limite, do modelo reserva e da retomada após o fim da cota.
 
 ## 4. Visão crítica
 

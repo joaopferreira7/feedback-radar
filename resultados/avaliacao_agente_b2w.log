@@ -1,0 +1,36 @@
+﻿Busca: embeddings
+
+> O que mais irrita os clientes?
+  ferramentas: ranking_impacto -> buscar_avaliacoes -> buscar_avaliacoes -> buscar_avaliacoes | citações: [66, 72, 24, 13, 3] | rejeitadas: [] | 8168 tokens
+  O que mais irrita os clientes são os problemas com a qualidade do produto e com os pedidos e entregas. Os clientes reclamam de itens que chegam danificados, usados ou com defeitos, além de atrasos longos e trocas demoradas. Para melhorar, verifique o controle de qualidade dos itens enviados antes do despacho e reforce o acompanhamento com as transportadoras para evitar atrasos nas entregas.
+
+> O que os clientes mais elogiam?
+  ferramentas: contar -> buscar_avaliacoes -> buscar_avaliacoes | citações: [53, 20, 51] | rejeitadas: [] | 5269 tokens
+  O que seus clientes mais elogiam é a qualidade do produto, que recebeu 61 avaliações positivas. Eles destacam que os itens são bonitos, de excelente tecido e superam as expectativas. Como sugestão prática, continue mantendo o rigor com os fornecedores e use esses elogios nas suas redes sociais para atrair mais compradores.
+
+> Os problemas de entrega pioraram ao longo dos meses?
+  ferramentas: contar -> buscar_avaliacoes | citações: [66, 42, 72] | rejeitadas: [] | 3963 tokens
+  Os problemas de entrega não pioraram ao longo dos meses. Tivemos 4 reclamações em janeiro, 2 em fevereiro, 3 em março, 4 em abril e 2 em maio. Os clientes reclamam bastante de atrasos e demoras. Como sugestão prática, vale a pena acompanhar de perto o prazo da transportadora e avisar o cliente rapidamente se houver qualquer imprevisto.
+
+> Compare janeiro com março: o que mudou?
+  ferramentas: comparar_periodos | citações: [] | rejeitadas: [] | 2480 tokens
+  Entre janeiro e março, sua nota média subiu de 3,57 para 3,76. As avaliações positivas aumentaram de 60% para 76%, e as negativas caíram de 26,7% para 24%. Os principais problemas continuam sendo a qualidade do produto e os pedidos/entregas, mas ambos melhoraram levemente. Continue monitorando a qualidade dos produtos que saem.
+
+> O que eu devo melhorar primeiro?
+  ferramentas: ranking_impacto -> buscar_avaliacoes | citações: [1, 15, 24, 42, 66] | rejeitadas: [] | 4540 tokens
+  Para melhorar a experiência dos seus clientes, o foco principal deve ser o processo de entrega. Embora a qualidade do produto seja o tema mais citado, a entrega apresenta uma taxa de insatisfação muito alta (71,4% das menções sobre o tema são negativas). Clientes relatam atrasos excessivos e produtos chegando com avarias ou embalagens violadas. A qualidade do produto também precisa de atenção, pois alguns itens chegam riscados ou com aparência ruim. Sugiro duas ações práticas: 1) Revisar o processo de embalagem e proteção dos produtos antes do envio para evitar danos no transporte; 2) Estabelecer um canal de comunicação mais transparente sobre o status do pedido para reduzir a ansiedade e a frustração com a demora na entrega.
+
+> Os clientes do iFood estão mais insatisfeitos que os do Google?
+  ferramentas: contar | citações: [] | rejeitadas: [] | 2203 tokens
+  Não é possível comparar o iFood com o Google porque os nossos dados atuais contêm apenas avaliações da fonte b2w (total de 100 avaliações). Sugiro começar a registrar e importar as avaliações do iFood e do Google para que possamos fazer essa comparação no futuro.
+
+> O que dizem sobre o banheiro?
+  ferramentas: buscar_avaliacoes -> buscar_avaliacoes -> contar | citações: [90] | rejeitadas: [] | 6482 tokens
+  Analisei todas as avaliações disponíveis e não encontrei nenhum comentário sobre o banheiro do seu estabelecimento. As menções ao termo 'limpeza' que apareceram em nosso sistema referem-se apenas à facilidade de limpar produtos vendidos, como fogões, e não ao ambiente da loja. Como não há feedback sobre esse espaço, sugiro que você faça uma verificação presencial periódica para garantir que o banheiro esteja sempre limpo e bem equipado, ou coloque uma pequena placa incentivando os clientes a deixarem sugestões sobre a infraestrutura do local.
+
+> Qual a opinião dos clientes sobre o estacionamento com manobrista?
+  ferramentas: buscar_avaliacoes -> contar | citações: [] | rejeitadas: [] | 4687 tokens
+  Não encontramos nenhuma menção ou avaliação sobre estacionamento ou manobrista em nossos registros. Parece que os clientes não estão comentando sobre esse serviço.
+
+Respondidas: 100% · média de 3.2 chamadas · 0 citações rejeitadas · custo total US$ 0.0374
+Planilha salva em saidas/avaliacao_agente_b2w.csv: preencha as colunas 'correta' e 'util'.

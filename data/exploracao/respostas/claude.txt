@@ -1,0 +1,22 @@
+{"classificacoes": [
+ {"id": 1, "sentimento": "neutro", "temas": ["demora", "preco", "qualidade_produto"], "intensidade": 2, "resumo_curto": "Entrega rápida e preço justo, mas uma panela chegou riscada por dentro."},
+ {"id": 2, "sentimento": "negativo", "temas": ["pedido_entrega"], "intensidade": 3, "resumo_curto": "Produto veio em cor diferente da anunciada e sem a bolsa; cobra o envio."},
+ {"id": 3, "sentimento": "negativo", "temas": ["qualidade_produto", "pedido_entrega", "atendimento"], "intensidade": 5, "resumo_curto": "Produto chegou gasto, sujo e diferente do anúncio; sem resposta ao e-mail, não recomenda."},
+ {"id": 4, "sentimento": "positivo", "temas": ["qualidade_produto", "preco"], "intensidade": 4, "resumo_curto": "Elogia o depilador leve, ergonômico e indolor, e recomenda pelo custo-benefício."},
+ {"id": 5, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "O alongador atendeu perfeitamente e trouxe mais conforto."},
+ {"id": 6, "sentimento": "positivo", "temas": ["demora", "preco", "qualidade_produto"], "intensidade": 4, "resumo_curto": "Chegou antes do previsto, preço ótimo, alisa bem e a filha adorou."},
+ {"id": 7, "sentimento": "positivo", "temas": ["qualidade_produto", "demora"], "intensidade": 4, "resumo_curto": "Adorou o acabamento e a beleza do produto e a entrega rápida."},
+ {"id": 8, "sentimento": "positivo", "temas": ["qualidade_produto", "preco"], "intensidade": 3, "resumo_curto": "Produto bom e barato, com resultado próximo ao original por baixo custo."},
+ {"id": 9, "sentimento": "negativo", "temas": ["demora", "atendimento"], "intensidade": 4, "resumo_curto": "Ainda não recebeu o produto, não teve satisfação e se sente lesado."},
+ {"id": 10, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 4, "resumo_curto": "Recomenda pela instalação fácil e pela água realmente gelada."},
+ {"id": 11, "sentimento": "positivo", "temas": ["atendimento", "demora", "pedido_entrega"], "intensidade": 4, "resumo_curto": "Elogia a comunicação, a entrega antes do prazo e as perfeitas condições."},
+ {"id": 12, "sentimento": "positivo", "temas": ["demora"], "intensidade": 2, "resumo_curto": "Produto e entrega dentro do prazo; espera que continue assim."},
+ {"id": 13, "sentimento": "negativo", "temas": ["qualidade_produto", "preco"], "intensidade": 5, "resumo_curto": "Botões falham, frete caro e desaconselha a compra."},
+ {"id": 14, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 5, "resumo_curto": "Elogia que desliza bem, é bivolt e esquenta rápido; garante que não haverá arrependimento."},
+ {"id": 15, "sentimento": "negativo", "temas": ["demora"], "intensidade": 3, "resumo_curto": "Compra feita há quase dois meses ainda não foi entregue."},
+ {"id": 16, "sentimento": "negativo", "temas": ["qualidade_produto"], "intensidade": 2, "resumo_curto": "A função smart da TV Philco não funciona e pergunta o que fazer."},
+ {"id": 17, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "Satisfeito com o produto, mas esperava mais da bateria."},
+ {"id": 18, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "Considera o celular ótimo, mas a câmera às vezes borra e ele esquenta."},
+ {"id": 19, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 4, "resumo_curto": "Recomenda a leitura e elogia Philip Yancey como grande autor cristão."},
+ {"id": 20, "sentimento": "positivo", "temas": ["qualidade_produto", "demora"], "intensidade": 4, "resumo_curto": "Produto excelente e entrega bem antes do previsto."}
+]}

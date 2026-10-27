@@ -1,0 +1,22 @@
+{"classificacoes": [
+{"id": 1, "sentimento": "neutro", "temas": ["demora", "preco", "qualidade_produto"], "intensidade": 2, "resumo_curto": "Elogia a entrega rápida e preço, mas reclama de panela riscada."},
+{"id": 2, "sentimento": "negativo", "temas": ["qualidade_produto", "pedido_entrega"], "intensidade": 3, "resumo_curto": "Reclama de cor errada e item faltando na entrega."},
+{"id": 3, "sentimento": "negativo", "temas": ["atendimento", "qualidade_produto"], "intensidade": 5, "resumo_curto": "Critica falta de retorno e envio de produto usado, sujo e riscado."},
+{"id": 4, "sentimento": "positivo", "temas": ["qualidade_produto", "preco"], "intensidade": 4, "resumo_curto": "Elogia a eficiência e custo-benefício do depilador."},
+{"id": 5, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "Informa que o alongador funcionou perfeitamente e trouxe conforto."},
+{"id": 6, "sentimento": "positivo", "temas": ["demora", "preco", "qualidade_produto"], "intensidade": 4, "resumo_curto": "Gostou da entrega adiantada, do preço ótimo e da qualidade da compra."},
+{"id": 7, "sentimento": "positivo", "temas": ["qualidade_produto", "demora"], "intensidade": 4, "resumo_curto": "Adorou o acabamento, beleza e entrega rápida do produto."},
+{"id": 8, "sentimento": "positivo", "temas": ["qualidade_produto", "preco"], "intensidade": 3, "resumo_curto": "Considera o produto bom, barato e com boa impressão."},
+{"id": 9, "sentimento": "negativo", "temas": ["demora", "atendimento"], "intensidade": 5, "resumo_curto": "Critica entrega péssima, atraso e falta de informações."},
+{"id": 10, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 4, "resumo_curto": "Recomenda produto por fácil instalação e água bem gelada."},
+{"id": 11, "sentimento": "positivo", "temas": ["atendimento", "demora", "qualidade_produto"], "intensidade": 4, "resumo_curto": "Elogia comunicação, entrega antecipada e condições do produto."},
+{"id": 12, "sentimento": "positivo", "temas": ["qualidade_produto", "demora"], "intensidade": 3, "resumo_curto": "Aprova produto e cumprimento do prazo de entrega."},
+{"id": 13, "sentimento": "negativo", "temas": ["qualidade_produto", "preco"], "intensidade": 5, "resumo_curto": "Reclama de botões falhando e frete caro, desrecomendando a compra."},
+{"id": 14, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 5, "resumo_curto": "Acha a prancha maravilhosa, esquenta rápido e recomenda."},
+{"id": 15, "sentimento": "negativo", "temas": ["demora"], "intensidade": 4, "resumo_curto": "Reclama da espera de 2 meses sem entrega efetuada."},
+{"id": 16, "sentimento": "negativo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "Relata que a função smart do controle não funciona."},
+{"id": 17, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "Satisfeito com o produto, ressalvando apenas a duração da bateria."},
+{"id": 18, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 3, "resumo_curto": "Considera o celular ótimo, apontando ressalvas na câmera e aquecimento."},
+{"id": 19, "sentimento": "positivo", "temas": ["qualidade_produto"], "intensidade": 5, "resumo_curto": "Elogia o livro e recomenda o autor."},
+{"id": 20, "sentimento": "positivo", "temas": ["qualidade_produto", "demora"], "intensidade": 5, "resumo_curto": "Adorou o produto excelente e a entrega antes do prazo."}
+]}

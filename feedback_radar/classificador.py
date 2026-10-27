@@ -30,6 +30,15 @@ class ErroAPI(Exception):
     """Erro permanente da API (ex.: chave inválida, modelo descontinuado)."""
 
 
+class ErroCota(ErroAPI):
+    """A cota diária do plano gratuito acabou."""
+
+
+def cota_diaria_esgotada(erro: Exception) -> bool:
+    texto = str(erro)
+    return "PerDay" in texto or ("exceeded your current quota" in texto and "PerMinute" not in texto)
+
+
 @dataclass
 class Estatisticas:
     """Contadores para controle de custo e tempo (mostrados no dashboard)."""
@@ -40,6 +49,7 @@ class Estatisticas:
     tokens_saida: int = 0
     segundos: float = 0.0
     erros: list[str] = field(default_factory=list)
+    interrompido: str = ""  # motivo, se a execução parou antes do fim (ex.: cota diária)
 
     @property
     def custo_estimado_usd(self) -> float:
@@ -105,6 +115,9 @@ def classificar_lote(cliente, itens: list[dict], stats: Estatisticas,
             # Erros permanentes (chave inválida, modelo inexistente): não adianta repetir
             if getattr(erro, "code", None) in (400, 401, 403, 404):
                 raise ErroAPI(f"Erro da API que não se resolve tentando de novo: {erro}") from erro
+            if cota_diaria_esgotada(erro):  # só volta no dia seguinte: insistir só gasta tempo
+                raise ErroCota("A cota diária gratuita do Gemini acabou. O que já foi classificado "
+                               "foi mantido; continue amanhã ou com outro modelo.") from erro
             erro_anterior = None
             stats.erros.append(f"API (tentativa {tentativa}): {str(erro)[:200]}")
             # Espera exponencial: 5s, 10s, 20s... (mais longa se for limite de uso)
@@ -159,7 +172,12 @@ def classificar_dataframe(df: pd.DataFrame, cliente, tamanho_lote: int = config.
     resultados: dict[int, Classificacao] = {}
     lotes = [itens[i:i + tamanho_lote] for i in range(0, len(itens), tamanho_lote)]
     for n, lote in enumerate(lotes, start=1):
-        resultados.update(classificar_lote(cliente, lote, stats, pausa))
+        try:
+            resultados.update(classificar_lote(cliente, lote, stats, pausa))
+        except ErroCota as erro:
+            # Para aqui, mas devolve o que já foi feito (as demais ficam com status "erro")
+            stats.interrompido = str(erro)
+            break
         if ao_progredir:
             ao_progredir(n / len(lotes))
 

@@ -27,10 +27,12 @@ class RespostaLLM:
 
 
 def _sobrecarga(erro: Exception) -> bool:
-    """Erro temporário do lado do Google: servidor sobrecarregado (503) ou tempo limite estourado (504)."""
+    """Erro em que vale tentar o modelo reserva: servidor sobrecarregado (503), tempo limite
+    estourado (504) ou cota do modelo principal esgotada (429; o reserva tem cota própria)."""
     texto = f"{type(erro).__name__} {erro}".lower()
-    return getattr(erro, "code", None) in (503, 504) or "unavailable" in texto \
-        or "deadline" in texto or "timeout" in texto or "timed out" in texto
+    return getattr(erro, "code", None) in (429, 503, 504) or "unavailable" in texto \
+        or "resource_exhausted" in texto or "deadline" in texto or "timeout" in texto \
+        or "timed out" in texto
 
 
 class ClienteGemini:
@@ -54,6 +56,7 @@ class ClienteGemini:
         self.modelo = modelo or config.GEMINI_MODELO
         self.modelo_reserva = config.GEMINI_MODELO_RESERVA
         self.chamadas_reserva = 0  # quantas respostas vieram do modelo reserva
+        self._sem_opcao_raciocinio: set[str] = set()  # modelos que não aceitam thinking_budget=0
         self.nome = f"Gemini ({self.modelo})"
 
     def gerar(self, sistema: str, usuario: str, dados_simulacao=None) -> RespostaLLM:
@@ -74,14 +77,22 @@ class ClienteGemini:
             temperature=0.0,  # respostas mais estáveis/reprodutíveis
             response_mime_type="application/json",  # pede JSON puro
         )
-        if config.GEMINI_DESATIVAR_RACIOCINIO:
+        desligar = config.GEMINI_DESATIVAR_RACIOCINIO and modelo not in self._sem_opcao_raciocinio
+        if desligar:
             opcoes["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
 
-        resposta = self._cliente.models.generate_content(
-            model=modelo,
-            contents=usuario,
-            config=types.GenerateContentConfig(**opcoes),
-        )
+        try:
+            resposta = self._cliente.models.generate_content(
+                model=modelo, contents=usuario, config=types.GenerateContentConfig(**opcoes))
+        except Exception as erro:
+            # Alguns modelos (ex.: os "lite") recusam a opção de desligar o raciocínio com erro 400:
+            # anotamos e repetimos sem ela
+            if not desligar or getattr(erro, "code", None) != 400:
+                raise
+            self._sem_opcao_raciocinio.add(modelo)
+            opcoes.pop("thinking_config")
+            resposta = self._cliente.models.generate_content(
+                model=modelo, contents=usuario, config=types.GenerateContentConfig(**opcoes))
         uso = resposta.usage_metadata
         saida = (getattr(uso, "candidates_token_count", 0) or 0) + (
             getattr(uso, "thoughts_token_count", 0) or 0

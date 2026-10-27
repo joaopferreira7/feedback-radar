@@ -95,12 +95,68 @@ def comparar(args):
             "formato": obs,
         })
 
+    # A aplicação (API) e a linha de base entram na mesma tabela, nas mesmas avaliações
+    ids_prompt = set(ler_csv(args.amostra)[0].sort_values("id").head(args.n)["id"])
+    # Cada saidas/amostra_classificada*.csv vira uma linha (ex.: _regras, _flash_lite)
+    for caminho in sorted(Path("saidas").glob("amostra_classificada*.csv")):
+        nome = "aplicacao" + caminho.stem.removeprefix("amostra_classificada")
+        classificado = pd.read_csv(caminho, encoding="utf-8-sig")
+        classificado = classificado[classificado["id"].isin(ids_prompt)]
+        m = calcular_metricas(gabarito[gabarito["id"].isin(ids_prompt)], classificado)
+        linhas.append({
+            "ferramenta": nome, "avaliacoes_validas": m["n"],
+            "acuracia_sentimento": round(m["acuracia"], 3), "f1_macro": round(m["f1_macro"], 3),
+            "kappa": round(m["kappa"], 3), "jaccard_temas": round(m["jaccard_medio"], 3),
+            "formato": "validado pelo pipeline",
+        })
+
     tabela = pd.DataFrame(linhas)
     print(tabela.to_string(index=False))
     saida = Path("saidas/exploracao_ferramentas.csv")
     saida.parent.mkdir(parents=True, exist_ok=True)
     tabela.to_csv(saida, index=False, encoding="utf-8-sig")
     print(f"\nTabela salva em {saida}. Complete as colunas qualitativas em docs/exploracao-ferramentas.md.")
+
+
+def concordancia(args):
+    """Sem gabarito: mede o quanto as ferramentas concordam entre si nas mesmas avaliações.
+
+    Concordar não é acertar (todas podem errar igual), mas mostra onde a tarefa é ambígua.
+    """
+    ids = set(ler_csv(args.amostra)[0].sort_values("id").head(args.n)["id"])
+    fontes = {c.stem: _ler_resposta(c)[0] for c in sorted((PASTA / "respostas").glob("*.txt"))}
+    for caminho in sorted(Path("saidas").glob("amostra_classificada*.csv")):
+        fontes["aplicacao" + caminho.stem.removeprefix("amostra_classificada")] = \
+            pd.read_csv(caminho, encoding="utf-8-sig")
+    fontes = {k: v[v["id"].isin(ids)].set_index("id") for k, v in fontes.items() if not v.empty}
+
+    nomes = list(fontes)
+    sent = pd.DataFrame(index=nomes, columns=nomes, dtype=float)
+    temas = pd.DataFrame(index=nomes, columns=nomes, dtype=float)
+    for a in nomes:
+        for b in nomes:
+            comuns = fontes[a].index.intersection(fontes[b].index)
+            sent.loc[a, b] = (fontes[a].loc[comuns, "sentimento"] == fontes[b].loc[comuns, "sentimento"]).mean()
+            jac = []
+            for i in comuns:
+                x, y = set(str(fontes[a].loc[i, "temas"]).split(";")), set(str(fontes[b].loc[i, "temas"]).split(";"))
+                jac.append(len(x & y) / len(x | y))
+            temas.loc[a, b] = sum(jac) / len(jac)
+
+    # Avaliações em que as ferramentas discordam no sentimento: candidatas a casos ambíguos
+    tabela = pd.DataFrame({k: v["sentimento"] for k, v in fontes.items()})
+    divergentes = tabela[tabela.nunique(axis=1) > 1]
+
+    print("Concordância de sentimento (proporção de avaliações com o mesmo rótulo):")
+    print(sent.round(2).to_string())
+    print("\nConcordância de temas (Jaccard médio):")
+    print(temas.round(2).to_string())
+    print(f"\n{len(divergentes)} de {len(tabela)} avaliações com sentimento diferente entre as fontes:")
+    print(divergentes.to_string())
+    saida = Path("saidas")
+    sent.round(3).to_csv(saida / "concordancia_sentimento.csv", encoding="utf-8-sig")
+    temas.round(3).to_csv(saida / "concordancia_temas.csv", encoding="utf-8-sig")
+    divergentes.to_csv(saida / "divergencias_ferramentas.csv", encoding="utf-8-sig")
 
 
 def main():
@@ -111,8 +167,13 @@ def main():
     pp.add_argument("--n", type=int, default=20)
     pc = sub.add_parser("comparar")
     pc.add_argument("--gabarito", required=True)
+    pc.add_argument("--amostra", default="data/rotulagem/amostra_validacao.csv")
+    pc.add_argument("--n", type=int, default=20)
+    pk = sub.add_parser("concordancia", help="concordância entre as ferramentas, sem gabarito")
+    pk.add_argument("--amostra", default="data/rotulagem/amostra_validacao.csv")
+    pk.add_argument("--n", type=int, default=20)
     args = p.parse_args()
-    preparar(args) if args.comando == "preparar" else comparar(args)
+    {"preparar": preparar, "comparar": comparar, "concordancia": concordancia}[args.comando](args)
 
 
 if __name__ == "__main__":

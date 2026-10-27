@@ -109,7 +109,17 @@ Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) ·
 - Exploração e crítica das ferramentas de IA: [docs/exploracao-ferramentas.md](docs/exploracao-ferramentas.md) e `scripts/comparar_ferramentas.py`
 - Parte 2, vídeo tutorial: [roteiro](docs/parte-2-video-tutorial.md)
 
-O que ainda depende do grupo: rotular as 100 avaliações reais, rodar as comparações, preencher os trechos entre colchetes do relatório e dos slides, e gravar o vídeo.
+- Dados reais: amostra de 100 avaliações do B2W-Reviews01 em `data/rotulagem/` ([licença](data/LICENCA-DADOS.md))
+- Resultados já medidos (comparação entre ferramentas, classificação da amostra, avaliação do agente): [resultados/](resultados/LEIA-ANTES.md). Não abra antes de rotular.
+
+O que ainda depende do grupo:
+
+1. Rotular as 100 avaliações em `data/rotulagem/planilha_rotulagem.xlsx`, em duplas, sem olhar `resultados/` nem `data/exploracao/respostas/`, e montar o `gabarito.xlsx` de consenso.
+2. Rodar as métricas (`avaliar_validacao.py` e `comparar_ferramentas.py comparar`) e preencher os colchetes do relatório e dos slides.
+3. Classificar a amostra com o `gemini-3.8-flash` quando a cota diária voltar (comando em `docs/exploracao-ferramentas.md`).
+4. Montar o classificador no Dify ou no Flowise (Atividade 2; exige criar conta, então é com vocês).
+5. Avaliar as respostas do agente (colunas `correta` e `util`).
+6. Gravar o vídeo da Parte 2 e adicionar o professor como colaborador do repositório.
 
 ## Avisos importantes
 

@@ -36,7 +36,7 @@ GEMINI_MODELO = _ler("GEMINI_MODELO", "gemini-3.8-flash")
 GEMINI_DESATIVAR_RACIOCINIO = _ler("GEMINI_DESATIVAR_RACIOCINIO", "1") == "1"
 # Usado quando o modelo principal está sobrecarregado (erro 503) ou passa do tempo limite.
 # Deixe vazio para não usar reserva.
-GEMINI_MODELO_RESERVA = _ler("GEMINI_MODELO_RESERVA", "gemini-3.5-flash")
+GEMINI_MODELO_RESERVA = _ler("GEMINI_MODELO_RESERVA", "gemini-3.5-flash-lite")
 # Tempo máximo de espera por resposta, em segundos
 GEMINI_TIMEOUT_SEGUNDOS = float(_ler("GEMINI_TIMEOUT_SEGUNDOS", "60"))
 # Modelo que transforma textos em vetores (embeddings) para a busca do agente analista
