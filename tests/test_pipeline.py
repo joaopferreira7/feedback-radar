@@ -136,6 +136,32 @@ def test_pipeline_simulado_e_relatorio():
     assert markdown_para_pdf(md)[:4] == b"%PDF"
 
 
+# ---------- Exportação para o Excel ----------
+
+def test_exportacao_excel_e_csv_brasileiro():
+    import io
+
+    from openpyxl import load_workbook
+
+    from feedback_radar.exportacao import para_csv, para_excel
+
+    df, _ = ler_csv("data/exemplos/avaliacoes_exemplo.csv")
+    resultado, _ = classificar_dataframe(df, ClienteSimulado(), tamanho_lote=10)
+
+    csv = para_csv(resultado).decode("utf-8-sig")
+    assert csv.splitlines()[0].startswith("id;texto;data;nota")
+    # O CSV exportado volta para o app com as mesmas datas e classificações
+    de_volta, _ = ler_csv(csv.encode("utf-8"))
+    assert list(de_volta["data"].dt.date) == list(resultado["data"].dt.date)
+    assert list(de_volta["sentimento"]) == list(resultado["sentimento"])
+
+    ws = load_workbook(io.BytesIO(para_excel(resultado))).active
+    cabecalho = [c.value for c in ws[1]]
+    assert cabecalho[:4] == ["ID", "Avaliação", "Sentimento", "Temas"]
+    assert "texto_enviado" not in cabecalho and "Status" not in cabecalho
+    assert ws.freeze_panes == "A2"
+
+
 # ---------- Métricas ----------
 
 def test_metricas_validacao():

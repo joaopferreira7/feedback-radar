@@ -11,6 +11,7 @@ import streamlit as st
 from feedback_radar import config
 from feedback_radar.agente import criar_indice, perguntar, resumo_resultado
 from feedback_radar.classificador import ErroAPI, classificar_dataframe, estimar_custo, lista_temas
+from feedback_radar.exportacao import para_csv, para_excel
 from feedback_radar.graficos import (grafico_evolucao, grafico_matriz_confusao, grafico_sentimento,
                                      grafico_temas)
 from feedback_radar.leitura_csv import ErroValidacaoCSV, ler_csv
@@ -172,9 +173,13 @@ with aba_dash:
                                "nota", "data", "fonte"] if c in tabela]
         st.dataframe(tabela[colunas], width="stretch", hide_index=True)
 
-        st.download_button("Baixar CSV classificado",
-                           df.to_csv(index=False).encode("utf-8-sig"),  # utf-8-sig abre certo no Excel
-                           "avaliacoes_classificadas.csv", "text/csv")
+        b1, b2, _ = st.columns([1, 1, 2])
+        b1.download_button("Baixar planilha Excel", para_excel(df), "avaliacoes_classificadas.xlsx",
+                           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                           type="primary")
+        b2.download_button("Baixar CSV", para_csv(df), "avaliacoes_classificadas.csv", "text/csv",
+                           help="Separado por ponto e vírgula, como o Excel em português espera. "
+                                "Pode ser enviado de volta ao app sem classificar de novo.")
 
 # ---------------- Aba 3: relatório ----------------
 with aba_rel:
@@ -329,5 +334,6 @@ with aba_val:
         st.markdown("Casos em que a IA discordou do grupo. As causas sugeridas são automáticas e precisam de revisão.")
         erros = tabela_de_erros(m)
         st.dataframe(erros, hide_index=True, width="stretch")
-        st.download_button("Baixar tabela de erros", erros.to_csv(index=False).encode("utf-8-sig"),
-                           "analise_de_erros.csv", "text/csv")
+        st.download_button("Baixar tabela de erros (Excel)", para_excel(erros, "Erros da IA"),
+                           "analise_de_erros.xlsx",
+                           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
