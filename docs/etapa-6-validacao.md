@@ -20,11 +20,13 @@ flowchart TD
 # 1. Sortear e gerar a planilha (semente fixa = sorteio reprodutível)
 python scripts/gerar_planilha_rotulagem.py data/olist_500.csv --n 100
 
-# 2. Copiar data/rotulagem/planilha_rotulagem.xlsx para rotulador_A.xlsx, rotulador_B.xlsx...
-#    (com 6 pessoas: 3 duplas, cada dupla rotula ~33 avaliações)
+# 2. Gerar um arquivo por pessoa (3 duplas; a dupla recebe as mesmas ~33 avaliações)
+#    Já feito: data/rotulagem/para_preencher/dupla1_pessoaA.xlsx ... dupla3_pessoaB.xlsx
+python scripts/dividir_rotulagem.py --duplas 3
 
-# 3. Concordância entre humanos
-python scripts/avaliar_validacao.py --gabarito data/rotulagem/rotulador_A.xlsx --rotulador-b data/rotulagem/rotulador_B.xlsx
+# 3. Com todos os arquivos preenchidos de volta na pasta: concordância de cada dupla (Kappa),
+#    gabarito com o que a dupla concordou e lista das divergências para a reunião
+python scripts/montar_gabarito.py
 
 # 4. Depois do consenso, classificar a amostra com a IA
 python scripts/classificar_cli.py data/rotulagem/amostra_validacao.csv --saida saidas/amostra_classificada.csv

@@ -114,7 +114,7 @@ Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) ·
 
 O que ainda depende do grupo:
 
-1. Rotular as 100 avaliações em `data/rotulagem/planilha_rotulagem.xlsx`, em duplas, sem olhar `resultados/` nem `data/exploracao/respostas/`, e montar o `gabarito.xlsx` de consenso.
+1. Rotular as 100 avaliações. Os arquivos de cada pessoa já estão prontos em `data/rotulagem/para_preencher/` (3 duplas; as duas pessoas de uma dupla recebem as mesmas avaliações e rotulam separadas, sem olhar `resultados/` nem `data/exploracao/respostas/`). Mandem os arquivos preenchidos para uma pessoa, que os coloca de volta nessa pasta (sem dar push antes de todos terminarem) e roda `python scripts/montar_gabarito.py`: as avaliações em que a dupla concordou entram sozinhas no `gabarito.xlsx`, e as divergências vão para `divergencias.xlsx`, para decidir em reunião.
 2. Rodar as métricas (`avaliar_validacao.py` e `comparar_ferramentas.py comparar`) e preencher os colchetes do relatório e dos slides.
 3. Opcional: classificar a amostra também com o `gemini-3.8-flash`, para comparar dois modelos (comando em `docs/exploracao-ferramentas.md`).
 4. Montar o classificador no Dify ou no Flowise (Atividade 2; exige criar conta, então é com vocês).

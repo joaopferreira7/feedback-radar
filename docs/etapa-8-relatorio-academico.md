@@ -96,7 +96,17 @@ O enunciado exige que todo uso de IA seja descrito. Este é o uso mais important
 
 A primeira versão de praticamente todo o código-fonte, dos testes automatizados, da documentação técnica e deste rascunho de relatório foi gerada pelo Claude Code, um assistente de programação da Anthropic, a partir do enunciado do trabalho e de pedidos sucessivos do grupo. O assistente também executou os testes, abriu a aplicação no navegador para conferi-la, fez o primeiro teste com a API real e preparou a publicação.
 
-O papel do grupo foi [descrever com honestidade: definir o problema e os requisitos, decidir entre as alternativas propostas, pedir mudanças (por exemplo, um visual mais sóbrio e sem emojis), revisar o código, fazer a rotulagem manual, executar as validações, testar com usuários e escrever a análise crítica e as conclusões. Citar dois ou três casos concretos em que a revisão humana mudou ou rejeitou algo].
+O trabalho com o assistente foi conduzido por um integrante ([nome]), que:
+
+- definiu o problema, os requisitos, a stack desejada e a exigência de validação contra rotulagem manual, no pedido inicial ao assistente;
+- rejeitou a primeira versão da interface, por parecer "feita por IA" (emojis, cores padrão), e pediu um visual sóbrio, que é o atual;
+- criou a chave da API, publicou o app no Streamlit Community Cloud, configurou a senha e os Secrets e reiniciou o app quando necessário;
+- testou o app publicado e encontrou dois problemas que os testes automatizados não pegaram: um erro 400 depois da troca de modelo, porque o app publicado ainda rodava uma versão antiga do código, e o CSV exportado, que abria todo numa coluna só no Excel em português. Os dois foram corrigidos a partir desse relato;
+- decidiu trocar o modelo padrão para o `gemini-3.5-flash-lite`, depois de ver o `gemini-3.8-flash` sobrecarregado;
+- pediu uma conferência do projeto contra o enunciado, da qual saiu a constatação de que faltava a exploração de outras ferramentas;
+- autorizou o assistente a usar o navegador dele para coletar as respostas do ChatGPT, do Claude e do Gemini, e a publicar o repositório.
+
+Os commits do repositório estão no nome desse integrante, por escolha do grupo, mas a maior parte do conteúdo deles foi gerada pelo assistente, como descrito acima. [Acrescentar a participação dos outros integrantes: quem rotulou cada parte da amostra, quem montou o fluxo no Dify ou no Flowise, quem avaliou as respostas do agente, quem produziu o vídeo e os slides, e quem estudou cada módulo do código. Citar mais um ou dois casos em que o grupo discordou de algo que o assistente propôs.]
 
 Erros do assistente que só foram percebidos em teste real: a escolha inicial de um modelo do Gemini que já tinha sido descontinuado para contas novas, preços desatualizados na estimativa de custo e uma substituição automática de texto que corrompeu linhas de configuração. Isso reforça que o código gerado por IA precisa ser testado em condições reais e revisado por pessoas.
 
