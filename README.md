@@ -116,10 +116,10 @@ O que ainda depende do grupo:
 
 1. Rotular as 100 avaliações em `data/rotulagem/planilha_rotulagem.xlsx`, em duplas, sem olhar `resultados/` nem `data/exploracao/respostas/`, e montar o `gabarito.xlsx` de consenso.
 2. Rodar as métricas (`avaliar_validacao.py` e `comparar_ferramentas.py comparar`) e preencher os colchetes do relatório e dos slides.
-3. Classificar a amostra com o `gemini-3.8-flash` quando a cota diária voltar (comando em `docs/exploracao-ferramentas.md`).
+3. Opcional: classificar a amostra também com o `gemini-3.8-flash`, para comparar dois modelos (comando em `docs/exploracao-ferramentas.md`).
 4. Montar o classificador no Dify ou no Flowise (Atividade 2; exige criar conta, então é com vocês).
 5. Avaliar as respostas do agente (colunas `correta` e `util`).
-6. Gravar o vídeo da Parte 2 e adicionar o professor como colaborador do repositório.
+6. Gravar o vídeo da Parte 2.
 
 ## Avisos importantes
 

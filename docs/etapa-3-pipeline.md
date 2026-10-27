@@ -48,7 +48,7 @@ flowchart TD
 - **Estimativa antes de rodar** (`estimar_custo`): nº de chamadas, tokens e custo em US$ se fosse plano pago. O app mostra isso antes do botão "Classificar"; a linha de comando pede confirmação.
 - **Contabilidade real** (`Estatisticas`): chamadas, retries, tokens de entrada/saída lidos da resposta da API, tempo total.
 - **Teto por execução**: `MAX_AVALIACOES=500` no `.env`.
-- **Pausa entre chamadas**: `PAUSA_ENTRE_CHAMADAS=6` s, para respeitar o limite de requisições por minuto do plano gratuito.
+- **Pausa entre chamadas**: `PAUSA_ENTRE_CHAMADAS=4` s (era 6; se o limite por minuto estourar, o código espera e tenta de novo), para respeitar o limite de requisições por minuto do plano gratuito.
 - **Não reclassificar**: se você enviar um CSV já classificado, o app carrega direto, sem gastar chamadas.
 
 ### Custo por avaliação (estimativa)

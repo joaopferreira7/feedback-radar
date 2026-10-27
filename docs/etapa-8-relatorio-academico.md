@@ -31,12 +31,12 @@ Ferramentas de IA generativa, com a função de cada uma:
 
 | Ferramenta | Função no projeto |
 |---|---|
-| Gemini 3.8 Flash (API do Google) | classifica as avaliações, redige o relatório de prioridades e conduz o agente analista |
+| Gemini 3.5 Flash-Lite (API do Google) | modelo padrão: classifica as avaliações, redige o relatório de prioridades e conduz o agente analista |
 | gemini-embedding-001 (API do Google) | transforma as avaliações em vetores para a busca semântica do agente |
 | Google AI Studio | criação da chave de API e teste de variações de prompt |
 | Claude Code (Anthropic) | assistente de programação: gerou a primeira versão do código, dos testes e da documentação (ver 3.5) |
 | ChatGPT, Claude e Gemini (versões web) | comparação: classificaram as mesmas 20 avaliações que a aplicação (ver 3.6) |
-| Gemini 3.5 Flash-Lite (API do Google) | modelo reserva, usado quando o principal está sobrecarregado ou sem cota |
+| Gemini 3.8 Flash e 3.1 Flash-Lite (API do Google) | o 3.8 foi o modelo padrão até 27/10/2026, quando foi trocado por sobrecarga e cota baixa; o 3.1 Flash-Lite é o reserva atual |
 | [Dify ou Flowise] | comparação: protótipo do classificador sem código (ver 3.6) |
 
 Bibliotecas e serviços de apoio: Python, pandas, Pydantic (validação do JSON), Streamlit e Plotly (interface e gráficos), scikit-learn (métricas e busca alternativa por TF-IDF), openpyxl (planilha de rotulagem), fpdf2 (PDF), pytest (testes), Git e GitHub, Streamlit Community Cloud (publicação) e Authlib (login Google).

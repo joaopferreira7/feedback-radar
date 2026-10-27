@@ -15,7 +15,7 @@ No computador, para usar sem login como antes, coloque `LOGIN_DESATIVADO=1` no `
 ## 1. Criar o app
 
 1. Entre em https://share.streamlit.io com a conta GitHub dona do repositório (`joaopferreira7`).
-2. Na primeira vez, autorize o acesso a repositórios privados. Sem isso o `feedback-radar` não aparece na lista.
+2. Se o repositório voltar a ser privado, autorize o acesso a repositórios privados na primeira vez; sem isso o `feedback-radar` não aparece na lista.
 3. Crie um app a partir do GitHub com o repositório `joaopferreira7/feedback-radar`, branch `main` e arquivo `app.py`. Escolha o endereço, por exemplo `feedback-radar-piloto.streamlit.app`.
 4. Em Advanced settings, escolha Python 3.11 ou mais novo e cole os Secrets (passo 2).
 5. Faça o deploy. A primeira instalação demora alguns minutos.
@@ -35,7 +35,7 @@ As configurações são lidas quando o app inicia. Depois de alterar os Secrets,
 
 Cada push na branch do app atualiza o código sozinho, mas o Streamlit mantém na memória os módulos de `feedback_radar` já carregados. Se depois de um push aparecer um `ImportError`, use Reboot app.
 
-Como o repositório é privado, o Streamlit cria o app como privado: só quem tem conta no Streamlit e foi convidado em Share consegue abrir o link, além da senha do app. Para o piloto, convide o e-mail de cada dono de negócio em Share ou deixe o app público nessa mesma tela e confie na senha.
+Desde 27/10/2026 o repositório é público (para o professor e a turma verem o código). O app continua protegido pela senha ou pelo login Google. Quando o repositório era privado, o Streamlit criava o app como privado e só convidados em Share conseguiam abrir o link.
 
 ## 3. Login com Google
 

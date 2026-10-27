@@ -102,12 +102,12 @@ Conclusão provisória para a pergunta da atividade: um chat classifica tão bem
 
 Na mesma noite, o `gemini-3.8-flash` (o modelo principal da aplicação) ficou sobrecarregado: chamadas triviais levavam até três minutos, e a classificação das 100 avaliações não terminou em 40 minutos. Depois, a cota diária gratuita do `gemini-3.5-flash` acabou. A amostra foi classificada com o `gemini-3.5-flash-lite`, que tem cota própria, em 88 segundos (10 chamadas, nenhuma nova tentativa). Por isso:
 
-- o modelo reserva padrão passou a ser o `gemini-3.5-flash-lite` (mais barato: US$ 0,30 e US$ 2,50 por milhão de tokens);
+- o `gemini-3.5-flash-lite` passou a ser o modelo padrão da aplicação (mais rápido e mais barato: US$ 0,30 e US$ 2,50 por milhão de tokens), com o `gemini-3.1-flash-lite` de reserva;
 - a classificação agora para na hora quando a cota diária acaba, guarda o que já foi feito e pode ser retomada com `--continuar`;
-- falta classificar a amostra também com o `gemini-3.8-flash` quando a cota voltar, para comparar os dois modelos com o gabarito:
+- opcional: classificar a amostra também com o `gemini-3.8-flash` quando a cota voltar, para comparar os dois modelos com o gabarito (no PowerShell, defina antes `$env:GEMINI_MODELO="gemini-3.8-flash"`):
 
   ```bash
-  python scripts/classificar_cli.py data/rotulagem/amostra_validacao.csv --sim --saida saidas/amostra_classificada_flash.csv
+  GEMINI_MODELO=gemini-3.8-flash python scripts/classificar_cli.py data/rotulagem/amostra_validacao.csv --sim --saida saidas/amostra_classificada_flash.csv
   ```
 
 ## Tabela para o relatório
@@ -116,8 +116,8 @@ Preencham depois das atividades. Os números vêm de `saidas/exploracao_ferramen
 
 | Ferramenta | Papel no projeto | Acurácia (20 avaliações) | Formato correto? | Ponto forte | Limitação principal |
 |---|---|---|---|---|---|
-| Gemini 3.8 Flash (API) | classificação, relatório e agente na aplicação | | sim (validado pelo código) | | sobrecarga e cota baixa no plano gratuito |
-| Gemini 3.5 Flash-Lite (API) | modelo reserva; classificou a amostra | | sim | rápido, barato, cota própria | |
+| Gemini 3.8 Flash (API) | modelo padrão até 27/10/2026 | | sim (validado pelo código) | | sobrecarga e cota baixa no plano gratuito |
+| Gemini 3.5 Flash-Lite (API) | modelo padrão atual; classificou a amostra | | sim | rápido, barato, cota própria | |
 | ChatGPT (web) | comparação | | sim | | mudou 1 sentimento e 3 temas numa segunda conversa |
 | Claude (web, Opus 5.5) | comparação | | sim | | versão paga, não comparável às gratuitas |
 | Gemini (web) | comparação | | sim | | |
