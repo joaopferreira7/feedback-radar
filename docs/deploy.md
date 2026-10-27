@@ -33,7 +33,9 @@ Copie o conteúdo de `.streamlit/secrets.toml.example` e troque os valores:
 
 As configurações são lidas quando o app inicia. Depois de alterar os Secrets, use Reboot app no menu do app.
 
-Cada push na branch do app atualiza o código sozinho, mas o Streamlit mantém na memória os módulos de `feedback_radar` já carregados. Se depois de um push aparecer um `ImportError`, use Reboot app.
+O app publicado roda da branch `deploy-streamlit`, e o Streamlit não permite trocar a branch de um app existente. Por isso a GitHub Action `.github/workflows/sincronizar-deploy.yml` copia a `main` para a `deploy-streamlit` a cada push: trabalhe sempre na `main`, sem commitar direto na `deploy-streamlit`.
+
+Cada push atualiza o código do app sozinho, mas o Streamlit mantém na memória os módulos de `feedback_radar` já carregados. Se depois de um push aparecer um `ImportError`, use Reboot app.
 
 Desde 27/10/2026 o repositório é público (para o professor e a turma verem o código). O app continua protegido pela senha ou pelo login Google. Quando o repositório era privado, o Streamlit criava o app como privado e só convidados em Share conseguiam abrir o link.
 

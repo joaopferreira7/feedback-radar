@@ -1,0 +1,24 @@
+# O app no Streamlit Community Cloud roda da branch deploy-streamlit, e o Streamlit
+# não deixa trocar a branch de um app existente. Esta ação mantém a deploy-streamlit
+# igual à main: cada push na main atualiza o app publicado sozinho.
+name: Sincronizar app publicado
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Atualizar deploy-streamlit com a main
+        # Só avança (fast-forward). Se alguém fizer commit direto na deploy-streamlit,
+        # o push é recusado e a ação falha, em vez de apagar esse commit.
+        run: git push origin HEAD:refs/heads/deploy-streamlit
