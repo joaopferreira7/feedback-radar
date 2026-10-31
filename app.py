@@ -12,10 +12,11 @@ from feedback_radar import config
 from feedback_radar.agente import criar_indice, perguntar, resumo_resultado
 from feedback_radar.classificador import ErroAPI, classificar_dataframe, estimar_custo, lista_temas
 from feedback_radar.exportacao import para_csv, para_excel
-from feedback_radar.graficos import (grafico_evolucao, grafico_matriz_confusao, grafico_sentimento,
-                                     grafico_temas)
+from feedback_radar.graficos import (grafico_concordancia, grafico_evolucao, grafico_matriz_confusao,
+                                     grafico_sentimento, grafico_temas)
 from feedback_radar.leitura_csv import ErroValidacaoCSV, ler_csv
-from feedback_radar.llm import ErroConfiguracao, criar_cliente
+from feedback_radar.comparacao import acuracia_por_modelo, classificar_com_modelos, concordancia
+from feedback_radar.llm import ErroConfiguracao, criar_cliente, provedores_configurados
 from feedback_radar.login import exigir_login
 from feedback_radar.relatorio import (calcular_impacto, gerar_relatorio, markdown_para_pdf,
                                       relatorio_markdown)
@@ -23,6 +24,8 @@ from feedback_radar.taxonomia import NOMES_TEMAS, SENTIMENTOS
 from feedback_radar.validacao import calcular_metricas, carregar_gabarito, tabela_de_erros
 
 EXEMPLO = Path(__file__).parent / "data" / "exemplos" / "avaliacoes_exemplo.csv"
+MODELOS = {"gemini": config.GEMINI_MODELO, "groq": config.GROQ_MODELO, "nvidia": config.NVIDIA_MODELO,
+           "simulado": "regras (sem IA)"}
 
 st.set_page_config(page_title="Feedback Radar", layout="wide")
 st.title("Feedback Radar")
@@ -32,16 +35,17 @@ exigir_login()  # nada abaixo roda (nem chamadas à API) sem login
 # ---------------- Barra lateral: configurações ----------------
 with st.sidebar:
     st.header("Configurações")
+    opcoes = provedores_configurados()  # só aparecem os provedores com chave preenchida
     provedor = st.selectbox(
-        "Provedor de IA", ["gemini", "simulado"],
-        index=0 if config.PROVEDOR_LLM == "gemini" else 1,
+        "Provedor de IA", opcoes,
+        index=opcoes.index(config.PROVEDOR_LLM) if config.PROVEDOR_LLM in opcoes else 0,
         help="'simulado' usa regras por palavras-chave (sem IA, sem custo) para testar o fluxo.")
     tamanho_lote = st.slider("Avaliações por chamada (lote)", 1, 25, config.TAMANHO_LOTE)
     anonimizar = st.checkbox("Anonimizar dados pessoais antes de enviar", value=True,
                              help="Remove e-mails, telefones, CPFs, links, @perfis e nomes após "
                                   "palavras como 'garçom'. Não é perfeito: revise dados reais.")
     st.divider()
-    st.caption(f"Modelo: {config.GEMINI_MODELO if provedor == 'gemini' else 'regras (sem IA)'}")
+    st.caption(f"Modelo: {MODELOS[provedor]}")
     st.caption(f"Limite por execução: {config.MAX_AVALIACOES} avaliações")
 
 
@@ -50,7 +54,7 @@ def _df() -> pd.DataFrame | None:
 
 
 aba_dados, aba_dash, aba_rel, aba_ana, aba_val = st.tabs(
-    ["Dados", "Painel", "Prioridades", "Analista", "Validação"])
+    ["Dados", "Painel", "Prioridades", "Analista", "Comparação de modelos"])
 
 # ---------------- Aba 1: upload e classificação ----------------
 with aba_dados:
@@ -233,6 +237,9 @@ with aba_ana:
             r = item["resultado"]
             with st.container(border=True):
                 st.markdown(f"**{item['pergunta']}**")
+                if r.fora_do_escopo:
+                    st.info(r.resposta)
+                    continue
                 st.write(r.resposta)
                 col = "texto_enviado" if "texto_enviado" in df else "texto"
                 textos = df.set_index(df["id"].astype(int))
@@ -280,7 +287,9 @@ with aba_ana:
             indice = st.session_state["indice"]
             if indice.aviso:
                 st.warning(indice.aviso)
-            historico = [{"pergunta": c["pergunta"], "resposta": c["resultado"].resposta} for c in conversa]
+            # Perguntas recusadas não entram no histórico: não ajudam e poderiam desviar o modelo
+            historico = [{"pergunta": c["pergunta"], "resposta": c["resultado"].resposta} for c in conversa
+                         if not c["resultado"].fora_do_escopo]
             with st.status("Investigando...", expanded=True) as status:
                 try:
                     resultado = perguntar(pergunta, df, cliente, indice, historico,
@@ -297,43 +306,107 @@ with aba_ana:
             st.session_state["conversa"] = []
             st.rerun()
 
-# ---------------- Aba 5: validação ----------------
+# ---------------- Aba 5: comparação de modelos ----------------
 with aba_val:
-    st.subheader("Comparação com a rotulagem do grupo")
-    st.markdown("Envie a planilha de rotulagem preenchida (gerada por "
-                "`scripts/gerar_planilha_rotulagem.py`). Ela é comparada com o arquivo classificado "
-                "carregado na aba Dados (os ids precisam ser os mesmos).")
-    gabarito_arq = st.file_uploader("Planilha de rotulagem (.xlsx ou .csv)", type=["xlsx", "csv"])
+    st.subheader("Os modelos chegam ao mesmo resultado?")
+    st.markdown("Classifica as mesmas avaliações com vários modelos de IA e mostra onde eles concordam "
+                "e onde discordam. Concordar não é acertar: modelos diferentes podem errar do mesmo jeito. "
+                "Para medir acerto, envie o gabarito do grupo no fim da página.")
     df = _df()
-    if gabarito_arq is not None and df is None:
-        st.info("Carregue também o CSV classificado na aba Dados.")
-    elif gabarito_arq is not None:
-        try:
-            gabarito = carregar_gabarito(gabarito_arq)
-            m = calcular_metricas(gabarito, df)
-        except (ValueError, KeyError) as erro:
-            st.error(f"Não foi possível comparar: {erro}")
-            st.stop()
+    df_base = df if df is not None else st.session_state.get("df_bruto")
+    if df_base is None:
+        st.info("Carregue um arquivo na aba Dados primeiro.")
+    else:
+        disponiveis = provedores_configurados()
+        faltando = [p for p in ("groq", "nvidia") if p not in disponiveis]
+        if faltando:
+            st.caption(f"Sem chave configurada: {', '.join(faltando)}. Veja docs/comparacao-modelos.md.")
+        c1, c2 = st.columns([3, 1])
+        escolhidos = c1.multiselect(
+            "Modelos", disponiveis, default=disponiveis,
+            format_func=lambda p: f"{p} ({MODELOS[p]})" if p != "simulado" else "linha de base (regras)")
+        n = c2.number_input("Avaliações", 5, min(200, len(df_base)), min(30, len(df_base)), step=5,
+                            help="Cada modelo classifica as mesmas avaliações. Use poucas para poupar a cota.")
 
-        c1, c2, c3, c4, c5 = st.columns(5)
-        c1.metric("Avaliações comparadas", m["n"])
-        c2.metric("Acurácia (sentimento)", f"{m['acuracia']:.0%}")
-        c3.metric("F1 macro", f"{m['f1_macro']:.2f}")
-        c4.metric("Kappa de Cohen", f"{m['kappa']:.2f}")
-        c5.metric("Jaccard médio (temas)", f"{m['jaccard_medio']:.2f}")
-        st.caption("Kappa: <0,4 fraco · 0,4–0,6 moderado · 0,6–0,8 substancial · >0,8 quase perfeito "
-                   "(Landis & Koch). Jaccard = temas em comum ÷ temas no total.")
+        if st.button("Comparar modelos", type="primary", disabled=len(escolhidos) < 2):
+            try:
+                clientes = {p: criar_cliente(p) for p in escolhidos}
+            except ErroConfiguracao as erro:
+                st.error(str(erro))
+                st.stop()
+            barra = st.progress(0.0, text="Classificando...")
+            total = len(clientes)
+            ordem = {nome: i for i, nome in enumerate(clientes)}
 
-        v1, v2 = st.columns(2)
-        v1.plotly_chart(grafico_matriz_confusao(m["matriz_confusao"]), width="stretch")
-        v2.markdown("**Por classe de sentimento**")
-        v2.dataframe(m["por_classe"].round(2), hide_index=True, width="stretch")
-        st.markdown(f"Temas: acerto exato do conjunto em {m['acerto_exato_temas']:.0%}")
-        st.dataframe(m["temas"].round(2), hide_index=True, width="stretch")
+            def _progresso(nome, fracao):
+                barra.progress((ordem[nome] + fracao) / total, text=f"Classificando com {nome}...")
 
-        st.markdown("Casos em que a IA discordou do grupo. As causas sugeridas são automáticas e precisam de revisão.")
-        erros = tabela_de_erros(m)
-        st.dataframe(erros, hide_index=True, width="stretch")
-        st.download_button("Baixar tabela de erros (Excel)", para_excel(erros, "Erros da IA"),
-                           "analise_de_erros.xlsx",
-                           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            try:
+                resultados, estatisticas = classificar_com_modelos(df_base.head(int(n)), clientes,
+                                                                   tamanho_lote, _progresso)
+            except ErroAPI as erro:
+                barra.empty()
+                st.error(str(erro))
+                st.stop()
+            barra.empty()
+            st.session_state["comparacao"] = {"resultados": resultados, "estatisticas": estatisticas,
+                                              "nomes": {p: clientes[p].nome for p in clientes}}
+
+        comp = st.session_state.get("comparacao")
+        if comp:
+            resultados = comp["resultados"]
+            for nome, stats in comp["estatisticas"].items():
+                falhas = (resultados[nome]["status"] == "erro").sum()
+                aviso = f" · {falhas} sem classificação" if falhas else ""
+                st.caption(f"{comp['nomes'][nome]}: {stats.chamadas} chamadas, {stats.segundos:.0f} s{aviso}"
+                           + (f" · {stats.interrompido}" if stats.interrompido else ""))
+
+            k = concordancia(resultados)
+            m1, m2 = st.columns(2)
+            m1.metric("Avaliações comparadas", k["comparadas"])
+            m2.metric("Todos os modelos concordam no sentimento",
+                      f"{k['todas_iguais']} ({k['todas_iguais'] / max(1, k['comparadas']):.0%})")
+
+            g1, g2 = st.columns(2)
+            g1.plotly_chart(grafico_concordancia(k["sentimento"], "Concordância de sentimento"),
+                            width="stretch")
+            g2.plotly_chart(grafico_concordancia(k["temas"], "Concordância de temas (Jaccard)"),
+                            width="stretch")
+
+            st.markdown("**Avaliações em que os modelos discordam.** Costumam ser as ambíguas: ironia, "
+                        "elogio misturado com crítica, texto curto.")
+            st.dataframe(k["divergentes"], hide_index=True, width="stretch")
+            st.download_button("Baixar comparação (Excel)",
+                               para_excel(k["divergentes"], "Divergências"), "comparacao_modelos.xlsx",
+                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+            st.divider()
+            st.markdown("**Acerto contra o gabarito do grupo (opcional).** Envie a planilha de rotulagem "
+                        "preenchida das mesmas avaliações; os ids precisam ser os mesmos.")
+            gabarito_arq = st.file_uploader("Gabarito (.xlsx ou .csv)", type=["xlsx", "csv"])
+            if gabarito_arq is not None:
+                try:
+                    gabarito = carregar_gabarito(gabarito_arq)
+                    notas = acuracia_por_modelo(resultados, gabarito)
+                except (ValueError, KeyError) as erro:
+                    st.error(f"Não foi possível comparar com o gabarito: {erro}")
+                    st.stop()
+                st.dataframe(notas.style.format({"acuracia": "{:.0%}", "f1_macro": "{:.2f}",
+                                                 "kappa": "{:.2f}", "recall_negativo": "{:.0%}",
+                                                 "jaccard_temas": "{:.2f}"}),
+                             hide_index=True, width="stretch")
+                st.caption("Kappa: <0,4 fraco · 0,4–0,6 moderado · 0,6–0,8 substancial · >0,8 quase "
+                           "perfeito (Landis & Koch).")
+
+                detalhe = st.selectbox("Ver detalhes de um modelo", list(resultados))
+                m = calcular_metricas(gabarito, resultados[detalhe])
+                v1, v2 = st.columns(2)
+                v1.plotly_chart(grafico_matriz_confusao(m["matriz_confusao"]), width="stretch")
+                v2.markdown("**Por classe de sentimento**")
+                v2.dataframe(m["por_classe"].round(2), hide_index=True, width="stretch")
+                erros = tabela_de_erros(m)
+                st.markdown("Casos em que o modelo discordou do grupo (causas sugeridas automaticamente):")
+                st.dataframe(erros, hide_index=True, width="stretch")
+                st.download_button("Baixar erros (Excel)", para_excel(erros, "Erros da IA"),
+                                   f"erros_{detalhe}.xlsx",
+                                   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")

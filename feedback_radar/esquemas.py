@@ -71,7 +71,7 @@ class RespostaRelatorio(BaseModel):
 class AcaoAgente(BaseModel):
     """Um passo do agente: usar uma ferramenta ou responder."""
     pensamento: str = ""
-    acao: Literal["ferramenta", "responder"]
+    acao: Literal["ferramenta", "responder", "recusar"]
     ferramenta: str | None = None
     argumentos: dict = Field(default_factory=dict)
     resposta: str | None = None

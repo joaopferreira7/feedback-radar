@@ -163,7 +163,9 @@ def classificar_dataframe(df: pd.DataFrame, cliente, tamanho_lote: int = config.
     Retorna (df com colunas novas, estatísticas).
     """
     if pausa is None:
-        pausa = config.PAUSA_ENTRE_CHAMADAS if cliente.__class__.__name__ == "ClienteGemini" else 0
+        from .llm import ClienteGemini, ClienteOpenAICompativel  # só APIs reais têm limite por minuto
+
+        pausa = config.PAUSA_ENTRE_CHAMADAS if isinstance(cliente, (ClienteGemini, ClienteOpenAICompativel)) else 0
     stats = Estatisticas()
     df = df.copy()
     df["texto_enviado"] = df["texto"].map(anonimizar) if anonimizar_textos else df["texto"]

@@ -1,0 +1,5 @@
+﻿,gemini,groq,nvidia,simulado
+gemini,1.0,0.793,0.808,0.368
+groq,0.793,1.0,0.819,0.37
+nvidia,0.808,0.819,1.0,0.371
+simulado,0.368,0.37,0.371,1.0

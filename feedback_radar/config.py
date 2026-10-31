@@ -39,6 +39,12 @@ GEMINI_DESATIVAR_RACIOCINIO = _ler("GEMINI_DESATIVAR_RACIOCINIO", "1") == "1"
 GEMINI_MODELO_RESERVA = _ler("GEMINI_MODELO_RESERVA", "gemini-3.1-flash-lite")
 # Tempo máximo de espera por resposta, em segundos
 GEMINI_TIMEOUT_SEGUNDOS = float(_ler("GEMINI_TIMEOUT_SEGUNDOS", "60"))
+# Outros provedores, usados na comparação de modelos (APIs no formato da OpenAI, com plano gratuito).
+# Chaves: https://console.groq.com/keys e https://build.nvidia.com (botão "Get API Key").
+GROQ_API_KEY = _ler("GROQ_API_KEY", "")
+GROQ_MODELO = _ler("GROQ_MODELO", "openai/gpt-oss-120b")
+NVIDIA_API_KEY = _ler("NVIDIA_API_KEY", "")
+NVIDIA_MODELO = _ler("NVIDIA_MODELO", "minimaxai/minimax-m3.1-flash")
 # Modelo que transforma textos em vetores (embeddings) para a busca do agente analista
 GEMINI_MODELO_EMBEDDING = _ler("GEMINI_MODELO_EMBEDDING", "gemini-embedding-001")
 

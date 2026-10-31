@@ -99,6 +99,7 @@ feedback-radar/
 7. [Roteiro de testes e limitações](docs/etapa-7-testes-e-limitacoes.md)
 8. [Rascunho do relatório acadêmico](docs/etapa-8-relatorio-academico.md) e [apêndice dos prompts](docs/apendice-prompts.md)
 9. [Agente analista](docs/etapa-9-agente-analista.md)
+10. [Comparação de modelos: Gemini, Groq e NVIDIA](docs/comparacao-modelos.md)
 
 Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) · [Do protótipo à aplicação prática](docs/aplicacao-pratica.md) · [Publicação](docs/deploy.md)
 

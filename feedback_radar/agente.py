@@ -31,6 +31,12 @@ from .relatorio import calcular_impacto
 from .taxonomia import SENTIMENTOS, TEMAS_VALIDOS
 
 AGRUPAMENTOS = ["sentimento", "tema", "mes", "fonte", "nota"]
+
+# Texto fixo, escrito pelo código: o modelo não redige nada quando a pergunta está fora do escopo
+MENSAGEM_FORA_DO_ESCOPO = (
+    "Só consigo responder perguntas sobre as avaliações dos seus clientes: o que eles elogiam ou "
+    "criticam, como isso mudou com o tempo e o que melhorar primeiro. Experimente perguntar, por "
+    "exemplo, \"o que mais irrita os clientes?\" ou \"os problemas de entrega pioraram?\".")
 MAX_CARACTERES_RESULTADO = 300  # corta textos longos devolvidos ao LLM (custo)
 
 
@@ -190,6 +196,7 @@ class RespostaAgente:
     citacoes: list[int]
     passos: list[Passo]
     citacoes_rejeitadas: list[int] = field(default_factory=list)
+    fora_do_escopo: bool = False
     chamadas: int = 0
     tokens_entrada: int = 0
     tokens_saida: int = 0
@@ -241,6 +248,20 @@ def perguntar(pergunta: str, df: pd.DataFrame, cliente, indice: IndiceBusca,
             continue
         erro_anterior = None
 
+        if acao.acao == "recusar":
+            return _fora_do_escopo(saida, passos, acao.pensamento)
+
+        # Trava no código (não depende do modelo obedecer ao prompt): uma resposta só vale se
+        # o agente consultou os dados. "O que é Python?" se responde sem dado nenhum.
+        usou_ferramenta = any(p.ferramenta for p in passos)
+        if acao.acao == "responder" and not usou_ferramenta:
+            if restantes <= 1:
+                return _fora_do_escopo(saida, passos, "respondeu sem consultar os dados")
+            erro_anterior = ("toda resposta precisa se basear em pelo menos uma ferramenta. Se a "
+                             "pergunta não é sobre as avaliações, use acao \"recusar\".")
+            passos.append(Passo(pensamento=acao.pensamento, erro=erro_anterior))
+            continue
+
         if acao.acao == "ferramenta" and restantes > 1:
             passo = Passo(acao.pensamento, acao.ferramenta, acao.argumentos)
             passo.resultado = ferramentas.executar(acao.ferramenta, acao.argumentos)
@@ -267,6 +288,14 @@ def perguntar(pergunta: str, df: pd.DataFrame, cliente, indice: IndiceBusca,
 
     saida.resposta = ("Não consegui chegar a uma resposta confiável dentro do limite de passos. "
                       "Tente reformular a pergunta de forma mais específica.")
+    return saida
+
+
+def _fora_do_escopo(saida: RespostaAgente, passos: list[Passo], motivo: str) -> RespostaAgente:
+    passos.append(Passo(pensamento=f"Fora do escopo: {motivo}"))
+    saida.resposta = MENSAGEM_FORA_DO_ESCOPO
+    saida.citacoes = []
+    saida.fora_do_escopo = True
     return saida
 
 

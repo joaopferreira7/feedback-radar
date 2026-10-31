@@ -95,8 +95,10 @@ def test_agente_rejeita_citacao_inventada(df, indice):
         {"acao": "responder", "resposta": "Os clientes reclamam de demora na entrega.", "citacoes": [9999]},
     ])
     r = perguntar("demora?", df, cliente, indice, max_passos=3)
-    assert "9999" in cliente.prompts[1]  # o erro foi explicado ao modelo
+    # 1ª resposta: rejeitada por não ter consultado os dados (o erro é explicado ao modelo)
+    assert "ferramenta" in cliente.prompts[1]
     assert r.citacoes == [] and r.citacoes_rejeitadas == [9999]  # no último passo, a citação é descartada
+    assert not r.fora_do_escopo
 
 
 def test_agente_se_recupera_de_json_invalido_e_ferramenta_errada(df, indice):
@@ -109,3 +111,26 @@ def test_agente_se_recupera_de_json_invalido_e_ferramenta_errada(df, indice):
     r = perguntar("qual o tema mais citado?", df, cliente, indice)
     assert r.resposta.startswith("Qualidade")
     assert "erro" in r.passos[1].resultado and "grupos" in r.passos[2].resultado
+
+
+# ---------- Escopo: perguntas que não são sobre as avaliações ----------
+
+def test_agente_recusa_pergunta_fora_do_escopo(df, indice):
+    from feedback_radar.agente import MENSAGEM_FORA_DO_ESCOPO
+
+    cliente = ClienteRoteiro([{"pensamento": "Pergunta de conhecimento geral.", "acao": "recusar"}])
+    r = perguntar("O que é Python?", df, cliente, indice)
+    assert r.fora_do_escopo and r.resposta == MENSAGEM_FORA_DO_ESCOPO and r.citacoes == []
+
+
+def test_resposta_sem_consultar_os_dados_e_rejeitada(df, indice):
+    """Mesmo que o modelo ignore o prompt e responda direto, o código não aceita."""
+    from feedback_radar.agente import MENSAGEM_FORA_DO_ESCOPO
+
+    resposta_direta = {"pensamento": "Sei responder.", "acao": "responder",
+                       "resposta": "Python é uma linguagem de programação criada em 1991."}
+    cliente = ClienteRoteiro([resposta_direta, resposta_direta])
+    r = perguntar("O que é Python?", df, cliente, indice, max_passos=2)
+    assert r.fora_do_escopo and r.resposta == MENSAGEM_FORA_DO_ESCOPO
+    assert "Python é uma linguagem" not in r.resposta
+    assert "precisa se basear em pelo menos uma ferramenta" in cliente.prompts[1]  # o erro foi explicado

@@ -9,6 +9,7 @@ Há dois "provedores" com a mesma interface (método gerar):
 Trocar de provedor (ex.: Groq, Ollama) exige só criar outra classe com gerar().
 """
 import json
+import re
 import unicodedata
 from dataclasses import dataclass
 
@@ -254,10 +255,95 @@ class ClienteSimulado:
         return RespostaLLM(texto=json.dumps(saida, ensure_ascii=False))
 
 
+# ---------------------------------------------------------------------------
+# Provedores com API no formato da OpenAI (Groq, NVIDIA)
+# ---------------------------------------------------------------------------
+
+class ErroHTTP(Exception):
+    """Erro HTTP com o código em .code, como os erros do SDK do Gemini (o retry usa isso)."""
+
+    def __init__(self, code: int, mensagem: str):
+        super().__init__(f"{code} {mensagem}")
+        self.code = code
+
+
+class ClienteOpenAICompativel:
+    """Cliente para APIs no formato /chat/completions da OpenAI.
+
+    Groq e NVIDIA (build.nvidia.com) usam esse formato, então uma classe serve para as duas.
+    Não tem embeddings: com estes provedores, a busca do agente usa TF-IDF.
+    """
+
+    def __init__(self, provedor: str, base_url: str, api_key: str, modelo: str, link_chave: str,
+                 transporte=None):
+        if not api_key:
+            raise ErroConfiguracao(f"Chave do {provedor} não definida. Crie uma em {link_chave} e "
+                                   f"coloque no .env (ou nos Secrets do Streamlit).")
+        import httpx
+
+        self._http = httpx.Client(  # transporte: só nos testes, para simular a API sem internet
+            base_url=base_url, timeout=config.GEMINI_TIMEOUT_SEGUNDOS, transport=transporte,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"})
+        self.modelo = modelo
+        self.nome = f"{provedor} ({modelo})"
+        self._aceita_modo_json = True
+
+    def gerar(self, sistema: str, usuario: str, dados_simulacao=None) -> RespostaLLM:
+        corpo = {
+            "model": self.modelo,
+            "messages": [{"role": "system", "content": sistema}, {"role": "user", "content": usuario}],
+            "temperature": 0.0,
+            "max_tokens": 4096,
+        }
+        if self._aceita_modo_json:
+            corpo["response_format"] = {"type": "json_object"}
+        if "gpt-oss" in self.modelo:
+            # Modelo de raciocínio: sem isso, em prompts longos ele pode gastar todos os tokens
+            # pensando e devolver a resposta vazia
+            corpo["reasoning_effort"] = "low"
+        resposta = self._http.post("/chat/completions", json=corpo)
+        if resposta.status_code == 400 and self._aceita_modo_json and "response_format" in resposta.text:
+            # Alguns modelos não aceitam o modo JSON: repetimos sem ele (o validador confere o formato)
+            self._aceita_modo_json = False
+            return self.gerar(sistema, usuario, dados_simulacao)
+        if resposta.status_code == 400 and "json_validate_failed" in resposta.text:
+            # O Groq recusa a resposta quando o modelo não gerou JSON válido. Não é erro da API:
+            # devolvemos o que foi gerado para o validador rejeitar e o pipeline tentar de novo
+            erro = (resposta.json().get("error") or {})
+            return RespostaLLM(texto=erro.get("failed_generation") or "")
+        if resposta.status_code != 200:
+            raise ErroHTTP(resposta.status_code, resposta.text[:500])
+
+        dados = resposta.json()
+        texto = dados["choices"][0]["message"].get("content") or ""
+        # Modelos de raciocínio às vezes devolvem o "pensamento" entre <think> antes do JSON
+        texto = re.sub(r"<think>.*?</think>", "", texto, flags=re.DOTALL)
+        uso = dados.get("usage") or {}
+        return RespostaLLM(texto=texto, tokens_entrada=uso.get("prompt_tokens", 0) or 0,
+                           tokens_saida=uso.get("completion_tokens", 0) or 0)
+
+
 def criar_cliente(provedor: str | None = None):
     provedor = (provedor or config.PROVEDOR_LLM).lower()
     if provedor == "simulado":
         return ClienteSimulado()
     if provedor == "gemini":
         return ClienteGemini()
-    raise ErroConfiguracao(f"Provedor desconhecido: {provedor}. Use 'gemini' ou 'simulado'.")
+    if provedor == "groq":
+        return ClienteOpenAICompativel("Groq", "https://api.groq.com/openai/v1", config.GROQ_API_KEY,
+                                       config.GROQ_MODELO, "https://console.groq.com/keys")
+    if provedor == "nvidia":
+        return ClienteOpenAICompativel("NVIDIA", "https://integrate.api.nvidia.com/v1",
+                                       config.NVIDIA_API_KEY, config.NVIDIA_MODELO,
+                                       "https://build.nvidia.com")
+    raise ErroConfiguracao(f"Provedor desconhecido: {provedor}. Use {', '.join(PROVEDORES)}.")
+
+
+PROVEDORES = ["gemini", "groq", "nvidia", "simulado"]
+
+
+def provedores_configurados() -> list[str]:
+    """Provedores com chave preenchida (o simulado não precisa de chave)."""
+    chaves = {"gemini": config.GEMINI_API_KEY, "groq": config.GROQ_API_KEY, "nvidia": config.NVIDIA_API_KEY}
+    return [p for p in PROVEDORES if p == "simulado"
+            or (chaves.get(p) and chaves[p] != "cole-sua-chave-aqui")]

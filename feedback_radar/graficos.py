@@ -42,6 +42,14 @@ def grafico_evolucao(df: pd.DataFrame):
     return fig
 
 
+def grafico_concordancia(matriz: pd.DataFrame, titulo: str):
+    """Matriz modelo × modelo com a proporção de concordância (0 a 1)."""
+    fig = px.imshow(matriz.astype(float), text_auto=".0%", zmin=0, zmax=1,
+                    color_continuous_scale=["#f4f1ea", "#2f4858"], title=titulo)
+    fig.update_layout(coloraxis_showscale=False, xaxis_title="", yaxis_title="")
+    return fig
+
+
 def grafico_matriz_confusao(matriz: pd.DataFrame):
     fig = px.imshow(matriz, text_auto=True, color_continuous_scale=["#f4f1ea", "#2f4858"],
                     title="Matriz de confusão do sentimento (linhas = humano, colunas = IA)")

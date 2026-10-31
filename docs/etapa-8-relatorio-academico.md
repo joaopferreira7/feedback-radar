@@ -36,6 +36,7 @@ Ferramentas de IA generativa, com a função de cada uma:
 | Google AI Studio | criação da chave de API e teste de variações de prompt |
 | Claude Code (Anthropic) | assistente de programação: gerou a primeira versão do código, dos testes e da documentação (ver 3.5) |
 | ChatGPT, Claude e Gemini (versões web) | comparação: classificaram as mesmas 20 avaliações que a aplicação (ver 3.6) |
+| GPT-OSS 120B (via Groq) e MiniMax M3.1 Flash (via NVIDIA) | comparação de modelos: classificam as mesmas avaliações que o Gemini (ver 3.6) |
 | Gemini 3.8 Flash e 3.1 Flash-Lite (API do Google) | o 3.8 foi o modelo padrão até 27/10/2026, quando foi trocado por sobrecarga e cota baixa; o 3.1 Flash-Lite é o reserva atual |
 | [Dify ou Flowise] | comparação: protótipo do classificador sem código (ver 3.6) |
 
@@ -119,6 +120,8 @@ As mesmas 20 avaliações reais, com o mesmo prompt, foram classificadas pelo Ch
 Todas as ferramentas devolveram JSON válido e dentro da taxonomia. Os modelos de linguagem concordaram entre si no sentimento em 95% a 100% das avaliações e, nos temas, com Jaccard médio entre 0,83 e 0,94. A linha de base concordou com eles em apenas 75% a 80% dos casos (Jaccard de 0,25 a 0,31 nos temas). A única avaliação que dividiu os modelos foi uma avaliação mista ("Entrega rápida, produto compatível com o preço, mas uma panela veio riscada"). O ChatGPT, repetido numa segunda conversa, mudou o sentimento de uma avaliação e os temas de três.
 
 A conclusão é que, nesta tarefa, um chat comum classifica tão bem quanto a aplicação, mas não escala (é preciso colar e copiar lotes à mão), não valida o formato, não é reprodutível e não oferece painel, relatório nem histórico. O valor da aplicação está no processo construído em volta do modelo. Concordância entre ferramentas não é acerto; a acurácia de cada uma contra o gabarito humano está em [tabela gerada por `scripts/comparar_ferramentas.py comparar`]. Os detalhes estão em `docs/exploracao-ferramentas.md`.
+
+A aplicação também ganhou uma aba de comparação entre modelos por API. Nas 100 avaliações reais, o Gemini (`gemini-3.5-flash-lite`), o GPT-OSS 120B da OpenAI (servido pelo Groq) e o MiniMax M3.1 Flash (servido pela NVIDIA) deram o mesmo sentimento em 93 avaliações; a concordância entre cada par ficou entre 93% e 96%, contra 71% a 75% da linha de base por palavras-chave. As 7 divergências eram todas avaliações mistas, e o MiniMax tendeu a classificá-las como neutras. Nos temas, a concordância entre as IAs foi menor (Jaccard de 0,79 a 0,82). O Groq foi o mais rápido (22 s) e a NVIDIA a mais lenta (198 s). No papel de agente analista, porém, o GPT-OSS não conseguiu conduzir a investigação com as ferramentas, e o Gemini segue como modelo do agente. Os Llama do Groq, planejados no início, só estavam disponíveis no plano empresarial. Detalhes em `docs/comparacao-modelos.md`.
 
 [Atividade 2: descrever a experiência de montar o classificador no Dify ou no Flowise e quando cada caminho vale a pena.]
 
