@@ -1,6 +1,6 @@
 # Feedback Radar
 
-Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard**, um **relatório de prioridades de melhoria** com exemplos reais e um **agente analista** que responde perguntas sobre as avaliações investigando os dados em vários passos (busca semântica e ferramentas de contagem). O diferencial é a **validação**: comparamos a IA com a rotulagem manual do grupo em 100 avaliações.
+Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard**, um **relatório de prioridades de melhoria** com exemplos reais e um **agente analista** que responde perguntas sobre as avaliações investigando os dados em vários passos (busca semântica e ferramentas de contagem). O diferencial é a **comparação de modelos**: as mesmas 100 avaliações reais são classificadas por três IAs de empresas diferentes (Gemini, GPT-OSS via Groq e MiniMax via NVIDIA), e a aplicação mostra onde elas concordam e onde divergem.
 
 ## Como rodar localmente
 
@@ -72,14 +72,15 @@ feedback-radar/
 │   ├── taxonomia.py            # temas fixos e definições
 │   ├── prompts.py              # prompts com few-shot
 │   ├── esquemas.py             # validação do JSON (Pydantic)
-│   ├── llm.py                  # cliente Gemini + modo simulado
+│   ├── llm.py                  # clientes Gemini, Groq e NVIDIA + modo simulado
 │   ├── leitura_csv.py          # leitura/validação do CSV
 │   ├── anonimizacao.py         # remoção de dados pessoais (LGPD)
 │   ├── classificador.py        # lotes, retry, custo
 │   ├── relatorio.py            # ranking de impacto + relatório MD/PDF
 │   ├── agente.py               # agente analista (laço ReAct e ferramentas)
 │   ├── busca.py                # busca semântica (embeddings ou TF-IDF)
-│   ├── validacao.py            # métricas IA × humano
+│   ├── validacao.py            # métricas IA × humano (opcional)
+│   ├── comparacao.py           # concordância entre modelos
 │   └── graficos.py             # gráficos Plotly
 ├── scripts/                    # linha de comando
 ├── tests/                      # pytest
@@ -97,7 +98,7 @@ feedback-radar/
 5. [Relatório de prioridades](docs/etapa-5-relatorio.md)
 6. [Validação contra rotulagem manual](docs/etapa-6-validacao.md)
 7. [Roteiro de testes e limitações](docs/etapa-7-testes-e-limitacoes.md)
-8. [Rascunho do relatório acadêmico](docs/etapa-8-relatorio-academico.md) e [apêndice dos prompts](docs/apendice-prompts.md)
+8. [Relatório acadêmico](docs/etapa-8-relatorio-academico.md) e [apêndice dos prompts](docs/apendice-prompts.md)
 9. [Agente analista](docs/etapa-9-agente-analista.md)
 10. [Comparação de modelos: Gemini, Groq e NVIDIA](docs/comparacao-modelos.md)
 
@@ -106,7 +107,7 @@ Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) ·
 ## Entregas do trabalho
 
 - Aplicação publicada: https://feedback-radar-jpf.streamlit.app (acesso com senha)
-- Relatório: [rascunho](docs/etapa-8-relatorio-academico.md), com o [apêndice dos prompts](docs/apendice-prompts.md) (regenerar com `python scripts/exportar_prompts.py`)
+- Relatório: [versão final](docs/etapa-8-relatorio-academico.md), com o [apêndice dos prompts](docs/apendice-prompts.md) (regenerar com `python scripts/exportar_prompts.py`)
 - Exploração e crítica das ferramentas de IA: [docs/exploracao-ferramentas.md](docs/exploracao-ferramentas.md) e `scripts/comparar_ferramentas.py`
 - Parte 2, vídeo tutorial: [roteiro](docs/parte-2-video-tutorial.md)
 
@@ -115,12 +116,10 @@ Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) ·
 
 O que ainda depende do grupo:
 
-1. Opcional: rotular as 100 avaliações, para medir o acerto de cada modelo além da concordância entre eles. Os arquivos de cada pessoa já estão prontos em `data/rotulagem/para_preencher/` (3 duplas; as duas pessoas de uma dupla recebem as mesmas avaliações e rotulam separadas, sem olhar `resultados/` nem `data/exploracao/respostas/`). Mandem os arquivos preenchidos para uma pessoa, que os coloca de volta nessa pasta (sem dar push antes de todos terminarem) e roda `python scripts/montar_gabarito.py`: as avaliações em que a dupla concordou entram sozinhas no `gabarito.xlsx`, e as divergências vão para `divergencias.xlsx`, para decidir em reunião.
-2. Rodar as métricas (`avaliar_validacao.py` e `comparar_ferramentas.py comparar`) e preencher os colchetes do relatório e dos slides.
-3. Opcional: classificar a amostra também com o `gemini-3.8-flash`, para comparar dois modelos (comando em `docs/exploracao-ferramentas.md`).
-4. Montar o classificador no Dify ou no Flowise (Atividade 2; exige criar conta, então é com vocês).
-5. Avaliar as respostas do agente (colunas `correta` e `util`).
-6. Gravar o vídeo da Parte 2.
+1. Opcional: rotular as 100 avaliações, para medir o acerto de cada modelo além da concordância entre eles. Os arquivos de cada pessoa já estão prontos em `data/rotulagem/para_preencher/` (2 duplas; a quinta pessoa desempata as divergências; as duas pessoas de uma dupla recebem as mesmas avaliações e rotulam separadas, sem olhar `resultados/` nem `data/exploracao/respostas/`). Mandem os arquivos preenchidos para uma pessoa, que os coloca de volta nessa pasta (sem dar push antes de todos terminarem) e roda `python scripts/montar_gabarito.py`: as avaliações em que a dupla concordou entram sozinhas no `gabarito.xlsx`, e as divergências vão para `divergencias.xlsx`, para decidir em reunião.
+2. Gravar o vídeo da Parte 2 ([roteiro](docs/parte-2-video-tutorial.md)).
+3. Ensaiar a apresentação; cada integrante confere a própria parte na seção 3.1 do relatório.
+4. Para a comparação de modelos funcionar no app publicado, colar `GROQ_API_KEY` e `NVIDIA_API_KEY` nos Secrets do Streamlit e reiniciar o app.
 
 ## Avisos importantes
 

@@ -1,9 +1,10 @@
 """Divide a planilha de rotulagem entre as duplas: um arquivo pronto para cada pessoa.
 
-Com 6 integrantes: 3 duplas, cada uma com ~33 avaliações. As duas pessoas de uma dupla
-recebem as MESMAS avaliações e rotulam separadas (é o que permite medir a concordância).
+Com 5 integrantes: 2 duplas, cada uma com 50 avaliações, e a quinta pessoa desempata as
+divergências na reunião. As duas pessoas de uma dupla recebem as MESMAS avaliações e rotulam
+separadas (é o que permite medir a concordância).
 
-  python scripts/dividir_rotulagem.py --duplas 3
+  python scripts/dividir_rotulagem.py --duplas 2
 
 Gera data/rotulagem/para_preencher/dupla1_pessoaA.xlsx, dupla1_pessoaB.xlsx, ...
 """
@@ -16,7 +17,7 @@ from openpyxl import load_workbook
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--planilha", default="data/rotulagem/planilha_rotulagem.xlsx")
-    p.add_argument("--duplas", type=int, default=3)
+    p.add_argument("--duplas", type=int, default=2)
     p.add_argument("--pasta", default="data/rotulagem/para_preencher")
     args = p.parse_args()
 

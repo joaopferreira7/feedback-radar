@@ -2,7 +2,7 @@
 
 O enunciado pede que o grupo pesquise e teste ferramentas de IA generativa e reflita sobre as vantagens, limitações e impacto de cada uma. Até aqui o projeto usou duas: o Gemini, dentro da aplicação, e o Claude Code, para programar. Este documento organiza os testes com outras ferramentas e registra a crítica das que já foram usadas.
 
-São três atividades independentes. Com seis pessoas, dá para cada dupla ficar com uma. Os resultados entram na seção 2 e na seção 4 do relatório.
+São três atividades independentes. Com cinco pessoas, dá para cada atividade ficar com uma ou duas. Os resultados entram na seção 2 e na seção 4 do relatório.
 
 ## Atividade 1: a mesma tarefa em três chats (ChatGPT, Claude e Gemini)
 

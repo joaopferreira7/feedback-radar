@@ -20,9 +20,10 @@ flowchart TD
 # 1. Sortear e gerar a planilha (semente fixa = sorteio reprodutível)
 python scripts/gerar_planilha_rotulagem.py data/olist_500.csv --n 100
 
-# 2. Gerar um arquivo por pessoa (3 duplas; a dupla recebe as mesmas ~33 avaliações)
-#    Já feito: data/rotulagem/para_preencher/dupla1_pessoaA.xlsx ... dupla3_pessoaB.xlsx
-python scripts/dividir_rotulagem.py --duplas 3
+# 2. Gerar um arquivo por pessoa (2 duplas; a dupla recebe as mesmas 50 avaliações;
+#    a quinta pessoa desempata as divergências na reunião)
+#    Já feito: data/rotulagem/para_preencher/dupla1_pessoaA.xlsx ... dupla2_pessoaB.xlsx
+python scripts/dividir_rotulagem.py --duplas 2
 
 # 3. Com todos os arquivos preenchidos de volta na pasta: concordância de cada dupla (Kappa),
 #    gabarito com o que a dupla concordou e lista das divergências para a reunião

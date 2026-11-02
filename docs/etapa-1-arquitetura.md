@@ -53,20 +53,19 @@ feedback-radar/
 | **Pydantic** para validar o JSON | O LLM pode errar o formato. O Pydantic verifica tipos, valores permitidos e a taxonomia, e devolve uma mensagem de erro clara que reenviamos ao modelo. |
 | **Lotes de 10 avaliações** | Uma chamada por avaliação gastaria muito da cota gratuita (limite de requisições por minuto/dia) e repetiria o prompt longo de instruções. Lotes muito grandes aumentam a chance de o modelo "pular" itens. 10 é um meio-termo; é configurável. |
 | **Modo "simulado"** | Permite que todo o grupo rode e teste o sistema sem chave de API, e serve como **linha de base** (baseline) na validação. |
-| **Núcleo separado da interface** | A mesma lógica é usada no dashboard, nos scripts e nos testes. Facilita testar e dividir o trabalho entre 6 pessoas. |
+| **Núcleo separado da interface** | A mesma lógica é usada no dashboard, nos scripts e nos testes. Facilita testar e dividir o trabalho entre 5 pessoas. |
 
-## Sugestão de divisão do trabalho (6 pessoas)
+## Divisão do trabalho (5 pessoas)
 
-| Pessoa | Responsabilidade |
+| Integrante | Responsabilidade |
 |---|---|
-| 1 | Leitura de CSV, anonimização, coleta de dados reais (autorização/LGPD) |
-| 2 | Taxonomia e engenharia de prompt (testar variações) |
-| 3 | Pipeline de classificação, custo e testes automatizados |
-| 4 | Dashboard (Streamlit + gráficos) |
-| 5 | Relatório de prioridades e exportação |
-| 6 | Coordenação da rotulagem manual, métricas e análise de erros |
+| João Pedro Ferreira | Coordenação, assistente de programação, chaves de API e publicação do app |
+| Gabriel Quirino Bressanin | Exploração das ferramentas e comparação de modelos |
+| Guilherme Barros Oliveira | Dados, anonimização (LGPD), taxonomia e prompts |
+| Heitor Lupino | Apresentação oral e vídeo tutorial |
+| Matheus Risso | Relatório, testes manuais e testes do agente analista |
 
-Todos participam da rotulagem (2 rotuladores por avaliação).
+A divisão final, com o módulo que cada um estudou, está na seção 3.1 do [relatório](etapa-8-relatorio-academico.md).
 
 ## Registro de uso de IA
 

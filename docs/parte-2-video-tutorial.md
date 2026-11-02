@@ -40,7 +40,7 @@ Limites de uso do plano gratuito, respostas que podem estar erradas (mostrar um 
 
 ## Produção
 
-Divisão sugerida para seis pessoas: duas no roteiro e nos exemplos, duas na gravação da tela e da narração, duas na edição e na revisão final.
+Divisão sugerida para cinco pessoas: Heitor Lupino coordena o vídeo e faz a edição; duas pessoas cuidam do roteiro e dos exemplos; duas gravam a tela e a narração. Todos revisam a versão final.
 
 Ferramentas gratuitas: OBS Studio para gravar a tela, DaVinci Resolve, Shotcut ou CapCut para editar. Gravar em 1080p, aumentar o zoom do navegador para o texto ficar legível e gravar a narração em ambiente silencioso, com o microfone de um fone de ouvido se não houver outro.
 
