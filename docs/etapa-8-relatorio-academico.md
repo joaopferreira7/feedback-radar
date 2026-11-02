@@ -2,7 +2,7 @@
 
 Integrantes: Gabriel Quirino Bressanin, Guilherme Barros Oliveira, Heitor Lupino, João Pedro Ferreira e Matheus Risso
 
-Disciplina: [nome da disciplina] · Professor(a): [nome] · Entrega: 19/11/2026
+Disciplina: Inteligência Artificial · Professor: Patrick Pedreira · Entrega: 19/11/2026
 
 Aplicação: https://feedback-radar-jpf.streamlit.app · Código: https://github.com/joaopferreira7/feedback-radar
 
