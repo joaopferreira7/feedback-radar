@@ -381,8 +381,7 @@ with aba_val:
                      for e in stats.erros]
             if erros:
                 with st.expander(f"Ver {len(erros)} erro(s) registrados"):
-                    st.code("
-".join(erros))
+                    st.code("\n".join(erros))
 
             k = concordancia(resultados)
             m1, m2 = st.columns(2)
