@@ -53,6 +53,16 @@ def _df() -> pd.DataFrame | None:
     return st.session_state.get("df_classificado")
 
 
+def _para_exibir(df: pd.DataFrame) -> pd.DataFrame:
+    """Cópia para mostrar na tela: data dd/mm/aaaa e nota sem casas decimais."""
+    df = df.copy()
+    if "data" in df.columns:
+        df["data"] = pd.to_datetime(df["data"], errors="coerce").dt.strftime("%d/%m/%Y")
+    if "nota" in df.columns:
+        df["nota"] = pd.to_numeric(df["nota"], errors="coerce").astype("Int64")
+    return df
+
+
 aba_dados, aba_dash, aba_rel, aba_ana, aba_val = st.tabs(
     ["Dados", "Painel", "Prioridades", "Analista", "Comparação de modelos"])
 
@@ -85,8 +95,9 @@ with aba_dados:
     if df_bruto is not None:
         for aviso in st.session_state.get("avisos", []):
             st.warning(aviso)
-        st.write(f"**{len(df_bruto)} avaliações válidas.** Prévia:")
-        st.dataframe(df_bruto.head(10), width="stretch", hide_index=True)
+        st.write(f"**{len(df_bruto)} avaliações válidas.** Prévia das "
+                 f"{min(10, len(df_bruto))} primeiras (todas serão classificadas):")
+        st.dataframe(_para_exibir(df_bruto.head(10)), width="stretch", hide_index=True)
 
         if len(df_bruto) > config.MAX_AVALIACOES:
             st.warning(f"Só as primeiras {config.MAX_AVALIACOES} avaliações serão classificadas "
@@ -138,6 +149,10 @@ with aba_dados:
             if stats.erros:
                 with st.expander(f"Ver {len(stats.erros)} erro(s) registrados"):
                     st.code("\n".join(stats.erros))
+            colunas = [c for c in ["id", "texto", "sentimento", "temas", "intensidade", "status"]
+                       if c in _df().columns]
+            st.write(f"**Resultado: {len(_df())} avaliações.** Gráficos e filtros na aba Painel.")
+            st.dataframe(_df()[colunas], width="stretch", hide_index=True, height=320)
 
 # ---------------- Aba 2: dashboard ----------------
 with aba_dash:
