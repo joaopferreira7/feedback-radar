@@ -107,7 +107,7 @@ Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) ·
 ## Entregas do trabalho
 
 - Aplicação publicada: https://feedback-radar-jpf.streamlit.app (acesso com senha)
-- Relatório: [versão final](docs/etapa-8-relatorio-academico.md), com o [apêndice dos prompts](docs/apendice-prompts.md) (regenerar com `python scripts/exportar_prompts.py`)
+- Relatório: [PDF](docs/Feedback-Radar-Relatorio.pdf), [Word](docs/Feedback-Radar-Relatorio.docx) e [versão em texto](docs/etapa-8-relatorio-academico.md), com o [apêndice dos prompts](docs/apendice-prompts.md) (regenerar com `python scripts/exportar_prompts.py`)
 - Exploração e crítica das ferramentas de IA: [docs/exploracao-ferramentas.md](docs/exploracao-ferramentas.md) e `scripts/comparar_ferramentas.py`
 - Parte 2, vídeo tutorial: [roteiro](docs/parte-2-video-tutorial.md)
 
