@@ -65,6 +65,8 @@ GROQ_API_KEY=...
 NVIDIA_API_KEY=...
 ```
 
+Cada chamada a esses provedores pode levar até `OUTROS_TIMEOUT_SEGUNDOS` (padrão 180 s). O MiniMax leva de 45 a 55 s para um lote de 15 avaliações; com o limite de 60 s usado no Gemini, os lotes estouravam o tempo no servidor do Streamlit e a comparação ficava minutos parada repetindo as chamadas.
+
 Os provedores só aparecem no app quando a chave está preenchida. Os mesmos provedores também ficam disponíveis na barra lateral, para classificar e usar o agente com eles. Como Groq e NVIDIA não oferecem embeddings neste projeto, a busca do agente usa TF-IDF quando um deles está selecionado.
 
 ## Privacidade

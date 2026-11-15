@@ -173,6 +173,8 @@ def classificar_dataframe(df: pd.DataFrame, cliente, tamanho_lote: int = config.
     itens = [{"id": int(i), "texto": t} for i, t in zip(df["id"], df["texto_enviado"])]
     resultados: dict[int, Classificacao] = {}
     lotes = [itens[i:i + tamanho_lote] for i in range(0, len(itens), tamanho_lote)]
+    if ao_progredir:
+        ao_progredir(0.0)  # avisa o início (na comparação, troca o nome do modelo na barra)
     for n, lote in enumerate(lotes, start=1):
         try:
             resultados.update(classificar_lote(cliente, lote, stats, pausa))

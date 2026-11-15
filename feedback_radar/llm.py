@@ -282,7 +282,7 @@ class ClienteOpenAICompativel:
         import httpx
 
         self._http = httpx.Client(  # transporte: só nos testes, para simular a API sem internet
-            base_url=base_url, timeout=config.GEMINI_TIMEOUT_SEGUNDOS, transport=transporte,
+            base_url=base_url, timeout=config.OUTROS_TIMEOUT_SEGUNDOS, transport=transporte,
             headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"})
         self.modelo = modelo
         self.nome = f"{provedor} ({modelo})"

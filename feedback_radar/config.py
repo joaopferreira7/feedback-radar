@@ -45,6 +45,9 @@ GROQ_API_KEY = _ler("GROQ_API_KEY", "")
 GROQ_MODELO = _ler("GROQ_MODELO", "openai/gpt-oss-120b")
 NVIDIA_API_KEY = _ler("NVIDIA_API_KEY", "")
 NVIDIA_MODELO = _ler("NVIDIA_MODELO", "minimaxai/minimax-m3.1-flash")
+# Tempo máximo por chamada a esses provedores. Maior que o do Gemini porque o MiniMax (NVIDIA)
+# leva de 45 a 55 s para um lote de 15 avaliações; com 60 s, o lote estourava o limite no servidor.
+OUTROS_TIMEOUT_SEGUNDOS = float(_ler("OUTROS_TIMEOUT_SEGUNDOS", "180"))
 # Modelo que transforma textos em vetores (embeddings) para a busca do agente analista
 GEMINI_MODELO_EMBEDDING = _ler("GEMINI_MODELO_EMBEDDING", "gemini-embedding-001")
 

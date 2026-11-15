@@ -354,7 +354,8 @@ with aba_val:
             ordem = {nome: i for i, nome in enumerate(clientes)}
 
             def _progresso(nome, fracao):
-                barra.progress((ordem[nome] + fracao) / total, text=f"Classificando com {nome}...")
+                barra.progress((ordem[nome] + fracao) / total,
+                               text=f"Classificando com {nome} ({fracao:.0%} deste modelo)...")
 
             try:
                 resultados, estatisticas = classificar_com_modelos(df_base.head(int(n)), clientes,
@@ -373,8 +374,15 @@ with aba_val:
             for nome, stats in comp["estatisticas"].items():
                 falhas = (resultados[nome]["status"] == "erro").sum()
                 aviso = f" · {falhas} sem classificação" if falhas else ""
-                st.caption(f"{comp['nomes'][nome]}: {stats.chamadas} chamadas, {stats.segundos:.0f} s{aviso}"
+                st.caption(f"{comp['nomes'][nome]}: {stats.chamadas} chamadas, {stats.retries} novas "
+                           f"tentativas, {stats.segundos:.0f} s{aviso}"
                            + (f" · {stats.interrompido}" if stats.interrompido else ""))
+            erros = [f"{comp['nomes'][nome]}: {e}" for nome, stats in comp["estatisticas"].items()
+                     for e in stats.erros]
+            if erros:
+                with st.expander(f"Ver {len(erros)} erro(s) registrados"):
+                    st.code("
+".join(erros))
 
             k = concordancia(resultados)
             m1, m2 = st.columns(2)
