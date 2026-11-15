@@ -3,6 +3,7 @@ Authlib>=1.3.2      # necessário para o login com Google (st.login)
 pandas>=2.2
 plotly>=5.22
 google-genai>=1.20
+httpx>=0.27          # cliente dos provedores Groq e NVIDIA
 pydantic>=2.7
 python-dotenv>=1.0
 scikit-learn>=1.5
