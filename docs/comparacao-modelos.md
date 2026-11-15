@@ -16,7 +16,7 @@ O limite importante: concordância não é acerto. Modelos diferentes podem come
 |---|---|---|---|
 | Google Gemini | `gemini-3.5-flash-lite` | https://aistudio.google.com/apikey | modelo principal da aplicação |
 | Groq | `openai/gpt-oss-120b` (modelo aberto da OpenAI) | https://console.groq.com/keys | plano gratuito com limite por minuto e por dia; muito rápido |
-| NVIDIA | `minimaxai/minimax-m3.1-flash` (MiniMax) | https://build.nvidia.com, botão "Get API Key" | créditos gratuitos para testes; o mais lento dos três |
+| NVIDIA | `nvidia/nemotron-3.5-bolt-e4b` (Nemotron, da própria NVIDIA) | https://build.nvidia.com, botão "Get API Key" | créditos gratuitos para testes; até 15/11/2026 o padrão era o MiniMax (`minimaxai/minimax-m3.1-flash`), trocado por lentidão |
 | Linha de base | regras por palavras-chave | não precisa | sem IA, serve de referência mínima |
 
 Groq e NVIDIA usam o mesmo formato de API da OpenAI (`/chat/completions`), então um único cliente (`ClienteOpenAICompativel`, em `feedback_radar/llm.py`) atende os dois. Os modelos podem ser trocados no `.env` (`GROQ_MODELO`, `NVIDIA_MODELO`); os nomes disponíveis mudam com o tempo e aparecem nos sites de cada provedor. Os limites gratuitos também mudam: confiram nas páginas dos provedores antes de citar números no relatório.
@@ -52,6 +52,19 @@ O que os números mostram:
 - Nos temas a concordância é menor que no sentimento: os modelos concordam no que o cliente sente, mas variam mais em quais temas marcar.
 - Em velocidade, o Groq foi o mais rápido (22 s, mas precisou de 3 novas tentativas por JSON inválido) e a NVIDIA a mais lenta (198 s). O Gemini ficou no meio, sem nenhuma falha.
 - Cada modelo tem um "jeito" de julgar. O MiniMax é o que mais fica em cima do muro (11 neutras, contra 7 do Gemini e 6 do GPT-OSS); o GPT-OSS é o mais crítico (30 negativas) e o mais contido na intensidade (média 3,8 de 5); o Gemini é o mais intenso (4,1 de 5). Na avaliação "Ótima qualidade, ótimo material, lindo... Só veio com o pistão quebrado", cada um deu uma resposta diferente: positivo (Gemini), negativo (GPT-OSS) e neutro (MiniMax). Foi a única das 100 com três respostas diferentes.
+## Troca do modelo da NVIDIA (15/11/2026)
+
+O MiniMax ficou lento demais para usar ao vivo. Em 31/10 ele levou 198 s para as 100 avaliações; em 15/11, uma única chamada com 15 avaliações levou 119 s, e a comparação de 30 avaliações no app publicado passou de 5 minutos (antes do aumento do tempo limite, chegou a 7 minutos com 5 novas tentativas). Testamos os modelos de texto liberados para a chave da NVIDIA com as mesmas 100 avaliações, lotes de 10:
+
+| Modelo | Tempo (100 avaliações) | Novas tentativas | Sentimento igual ao Gemini | Temas (Jaccard com o Gemini) | Observação |
+|---|---|---|---|---|---|
+| `minimaxai/minimax-m3.1-flash` | 198 s (31/10) | 0 | 96% | 0,81 | lento e com tempo muito variável |
+| `nvidia/nemotron-3.5-lightning-30b-a3b` sem raciocínio | 31 s | 2 | 94% | 0,44 | marcou "outros" em 35 avaliações e inventou o sentimento "misto"; com raciocínio ligado, devolveu resposta vazia ou passou de 10 minutos |
+| **`nvidia/nemotron-3.5-bolt-e4b`** | **71 s** | **0** | **92%** | **0,68** | escolhido: estável, cerca de 7 s por chamada |
+| `google/gemma-4-31b-it` | 88 a 106 s por chamada | | | | descartado pelo tempo |
+
+Outros modelos da lista (Mistral, Kimi, Nemotron Super) devolveram 404 para a nossa conta, e o GLM e o DeepSeek passaram do tempo limite ou responderam vazio. O Nemotron Bolt é um modelo pequeno e concorda um pouco menos com o Gemini nos temas, mas classifica 30 avaliações em uns 20 segundos, o que viabiliza a demonstração ao vivo. Os resultados da seção anterior continuam sendo os do MiniMax, medidos em 31/10. Arquivos: `resultados/comparacao_nvidia_nemotron_bolt.csv` e `resultados/comparacao_nvidia_nemotron_lightning.csv`.
+
 ## Agente analista com outros modelos
 
 Os provedores também podem ser usados no agente analista, mas o resultado depende muito do modelo. No teste com o `openai/gpt-oss-120b` (Groq), o agente não conseguiu responder às perguntas sobre os dados: o modelo tentou responder sem consultar as ferramentas, citou avaliações que não tinha lido e devolveu respostas vazias. As travas do código rejeitaram tudo isso, então nada inventado chegou ao usuário, mas também não houve resposta. As perguntas fora do escopo foram recusadas corretamente. Recomendação: usar o Gemini no agente e os outros modelos na comparação de classificação.
