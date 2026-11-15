@@ -62,7 +62,7 @@ Divisão de tarefas:
 | João Pedro Ferreira | coordenação; condução do assistente de programação; chaves de API, publicação do app e testes no app publicado | configuração e publicação (`config.py`, `docs/deploy.md`) |
 | Gabriel Quirino Bressanin | exploração das ferramentas: análise das respostas do ChatGPT, do Claude e do Gemini web e da comparação entre Gemini, Groq e NVIDIA | comparação de modelos (`comparacao.py`, `llm.py`) |
 | Guilherme Barros Oliveira | dados e privacidade: escolha do dataset e da licença, anonimização (LGPD), revisão da taxonomia de temas e dos exemplos do prompt | leitura, anonimização e prompts (`leitura_csv.py`, `anonimizacao.py`, `prompts.py`) |
-| Heitor Lupino | apresentação oral e vídeo tutorial da Parte 2: roteiro, gravação e edição | painel (`app.py`, `graficos.py`) |
+| Heitor Lupino | desenvolvimento do painel e dos gráficos, junto com o assistente; apresentação oral e vídeo tutorial da Parte 2: roteiro, gravação e edição | painel (`app.py`, `graficos.py`) |
 | Matheus Risso | relatório, roteiro de testes manuais e testes do agente analista, incluindo as perguntas fora do escopo | agente analista (`agente.py`, `busca.py`) |
 
 ### 3.2 Arquitetura
@@ -93,17 +93,17 @@ O B2W é de comércio eletrônico, não de restaurantes: os temas de entrega, pr
 
 O enunciado exige que todo uso de IA seja descrito, inclusive na escrita. Este foi o uso mais importante do projeto.
 
-O grupo usou o Claude Code, assistente de programação da Anthropic, como apoio técnico durante todo o projeto. Ele nos orientou na arquitetura e nas escolhas técnicas, nos ajudou a desenvolver o código e a resolver os problemas de programação que apareceram no caminho. Boa parte do código, dos testes e da documentação foi escrita com o assistente, a partir dos nossos pedidos, e depois revisada e testada pelo grupo. Ele também ajudou a redigir os slides e este relatório, e executou os testes com as APIs reais e a coleta das respostas do ChatGPT, do Claude e do Gemini web, com autorização do integrante dono da conta.
+O projeto foi desenvolvido pelo grupo com a orientação do Claude Code, assistente de programação da Anthropic. Ao longo do trabalho, ele nos orientou na arquitetura e nas escolhas técnicas e nos ajudou a escrever e corrigir o código, principalmente quando apareciam problemas de programação que não sabíamos resolver sozinhos. O desenvolvimento foi feito em conjunto: o grupo definia o que cada parte devia fazer, pedia as mudanças, revisava e testava, e boa parte do código e da documentação foi escrita com o assistente a partir desses pedidos. Ele também ajudou a redigir os slides e este relatório, rodou os testes com as APIs reais e coletou as respostas do ChatGPT, do Claude e do Gemini web, com autorização do integrante dono da conta.
 
-O que ficou com o grupo:
+O que o grupo desenvolveu e decidiu:
 
-- definir o problema, os requisitos e as ferramentas do projeto;
-- decidir a taxonomia de temas, os modelos a comparar (Groq e NVIDIA) e a troca do modelo padrão para o Gemini 3.5 Flash-Lite quando o 3.8 Flash travou;
-- criar as chaves de API, publicar o app no Streamlit Community Cloud e configurar o acesso;
-- testar o app como usuário e encontrar problemas que os testes automatizados não pegaram: a planilha exportada que abria toda numa coluna só no Excel, o app publicado rodando uma versão antiga e o agente respondendo perguntas sem relação com o negócio ("o que é Python?");
-- pedir um visual sóbrio no lugar da primeira interface, que parecia "feita por IA";
-- interpretar os resultados da comparação de modelos, fazer a análise crítica e escrever as conclusões;
-- estudar um módulo do código cada um (seção 3.1), para conseguir explicá-lo na apresentação.
+- definiu o problema, os requisitos, a taxonomia de temas e as ferramentas do projeto;
+- desenvolveu, com a orientação do assistente, as partes sob responsabilidade de cada integrante (seção 3.1): a leitura e a anonimização dos dados, os prompts, o painel de gráficos, a comparação de modelos e os testes do agente analista;
+- escolheu os modelos a comparar (Groq e NVIDIA) e trocou o modelo padrão para o Gemini 3.5 Flash-Lite quando o 3.8 Flash travou;
+- criou as chaves de API, publicou o app no Streamlit Community Cloud e configurou o acesso;
+- testou o app como usuário e encontrou problemas que os testes automatizados não pegaram: a planilha exportada que abria toda numa coluna só no Excel, o app publicado rodando uma versão antiga, o agente respondendo perguntas sem relação com o negócio ("o que é Python?") e a comparação de modelos parada por causa da lentidão da NVIDIA;
+- pediu um visual sóbrio no lugar da primeira interface, que parecia "feita por IA";
+- interpretou os resultados da comparação de modelos, fez a análise crítica e escreveu as conclusões.
 
 Problemas de programação resolvidos com a ajuda do assistente: o modelo do Gemini descontinuado, a lentidão e o fim da cota gratuita (tempo limite, modelo reserva e retomada do processamento), as datas lidas no formato errado, a exportação para Excel e o bloqueio das perguntas fora do escopo. O próprio assistente também errou: indicou preços desatualizados, fez uma substituição de texto que corrompeu a configuração e sugeriu um modelo do Groq que só estava disponível no plano empresarial. Tudo foi corrigido, mas mostra que código feito com IA precisa ser testado em condições reais.
 

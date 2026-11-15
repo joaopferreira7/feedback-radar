@@ -62,7 +62,7 @@ feedback-radar/
 | João Pedro Ferreira | Coordenação, assistente de programação, chaves de API e publicação do app |
 | Gabriel Quirino Bressanin | Exploração das ferramentas e comparação de modelos |
 | Guilherme Barros Oliveira | Dados, anonimização (LGPD), taxonomia e prompts |
-| Heitor Lupino | Apresentação oral e vídeo tutorial |
+| Heitor Lupino | Desenvolvimento do painel e dos gráficos, apresentação oral e vídeo tutorial |
 | Matheus Risso | Relatório, testes manuais e testes do agente analista |
 
 A divisão final, com o módulo que cada um estudou, está na seção 3.1 do [relatório](etapa-8-relatorio-academico.md).
