@@ -21,7 +21,7 @@ O limite importante: concordância não é acerto. Modelos diferentes podem come
 
 Groq e NVIDIA usam o mesmo formato de API da OpenAI (`/chat/completions`), então um único cliente (`ClienteOpenAICompativel`, em `feedback_radar/llm.py`) atende os dois. Os modelos podem ser trocados no `.env` (`GROQ_MODELO`, `NVIDIA_MODELO`); os nomes disponíveis mudam com o tempo e aparecem nos sites de cada provedor. Os limites gratuitos também mudam: confiram nas páginas dos provedores antes de citar números no relatório.
 
-Os três modelos são de empresas diferentes (Google, OpenAI e MiniMax), o que torna a comparação mais informativa do que comparar versões de um mesmo modelo. O padrão inicial do Groq era o `llama-3.3-70b-versatile`, que já não estava disponível quando a chave foi criada (31/10/2026); entre os modelos de texto oferecidos, o `openai/gpt-oss-120b` e o `qwen/qwen3.8-27b` classificaram 10 de 10 avaliações de teste corretamente, e o primeiro foi escolhido para trazer uma terceira família.
+Os três modelos são de empresas diferentes (Google, OpenAI e, até 15/11/2026, MiniMax; hoje a NVIDIA com o Nemotron), o que torna a comparação mais informativa do que comparar versões de um mesmo modelo. O padrão inicial do Groq era o `llama-3.3-70b-versatile`, que já não estava disponível quando a chave foi criada (31/10/2026); entre os modelos de texto oferecidos, o `openai/gpt-oss-120b` e o `qwen/qwen3.8-27b` classificaram 10 de 10 avaliações de teste corretamente, e o primeiro foi escolhido para trazer uma terceira família.
 
 ## Resultado com as 100 avaliações reais (31/10/2026)
 
@@ -63,7 +63,19 @@ O MiniMax ficou lento demais para usar ao vivo. Em 31/10 ele levou 198 s para as
 | **`nvidia/nemotron-3.5-bolt-e4b`** | **71 s** | **0** | **92%** | **0,68** | escolhido: estável, cerca de 7 s por chamada |
 | `google/gemma-4-31b-it` | 88 a 106 s por chamada | | | | descartado pelo tempo |
 
-Outros modelos da lista (Mistral, Kimi, Nemotron Super) devolveram 404 para a nossa conta, e o GLM e o DeepSeek passaram do tempo limite ou responderam vazio. O Nemotron Bolt é um modelo pequeno e concorda um pouco menos com o Gemini nos temas, mas classifica 30 avaliações em uns 20 segundos, o que viabiliza a demonstração ao vivo. Os resultados da seção anterior continuam sendo os do MiniMax, medidos em 31/10. Arquivos: `resultados/comparacao_nvidia_nemotron_bolt.csv` e `resultados/comparacao_nvidia_nemotron_lightning.csv`.
+Testes rápidos com um lote de 15 avaliações, que descartaram os demais modelos da lista:
+
+| Modelo | Resultado |
+|---|---|
+| `deepseek-ai/deepseek-v4.1-flash` | 147 s e resposta vazia |
+| `z-ai/glm-5.3-flash` | passou do tempo limite de 180 s |
+| `mistralai/mistral-large-2-instruct` | erro 404 (não liberado para a conta) |
+| `nv-mistralai/mistral-nemo-12b-instruct` | erro 404 |
+| `moonshotai/kimi-k2.6` | erro 404 |
+| `nvidia/nemotron-3-super-120b-a12b` | erro 404 |
+| `nvidia/nemotron-nano-3-30b-a3b` | erro 404 |
+
+A lista completa de modelos testados no projeto, incluindo os do Gemini e do Groq, está na seção 3.6 do relatório (`docs/Feedback-Radar-Relatorio.pdf`). O Nemotron Bolt é um modelo pequeno e concorda um pouco menos com o Gemini nos temas, mas classifica 30 avaliações em uns 20 segundos, o que viabiliza a demonstração ao vivo. Os resultados da seção anterior continuam sendo os do MiniMax, medidos em 31/10. Arquivos: `resultados/comparacao_nvidia_nemotron_bolt.csv` e `resultados/comparacao_nvidia_nemotron_lightning.csv`.
 
 ## Agente analista com outros modelos
 
