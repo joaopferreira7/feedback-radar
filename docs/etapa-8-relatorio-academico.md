@@ -36,7 +36,7 @@ Ferramentas de IA generativa, com a função de cada uma:
 | MiniMax M3.1 Flash (via NVIDIA) | comparação de modelos |
 | ChatGPT, Claude e Gemini (versões web) | comparação: classificaram as mesmas 20 avaliações que a aplicação, colando o prompt no chat |
 | Google AI Studio | criação da chave de API e teste de variações de prompt |
-| Claude Code (Anthropic) | assistente de programação: gerou a primeira versão do código, dos testes, da documentação, dos slides e deste relatório (ver 3.5) |
+| Claude Code (Anthropic) | assistente de programação: orientou o grupo e ajudou a desenvolver o código, a resolver problemas de programação e a redigir a documentação, os slides e este relatório (ver 3.5) |
 
 Bibliotecas e serviços de apoio: Python, pandas, Pydantic (validação do JSON), Streamlit e Plotly (interface e gráficos), scikit-learn (métricas e busca alternativa por TF-IDF), openpyxl (planilhas), fpdf2 (PDF), pytest (testes), Git e GitHub, GitHub Actions (publicação automática) e Streamlit Community Cloud.
 
@@ -93,21 +93,19 @@ O B2W é de comércio eletrônico, não de restaurantes: os temas de entrega, pr
 
 O enunciado exige que todo uso de IA seja descrito, inclusive na escrita. Este foi o uso mais importante do projeto.
 
-A primeira versão de praticamente todo o código-fonte, dos testes automatizados, da documentação técnica, dos slides e do texto deste relatório foi gerada pelo Claude Code, um assistente de programação da Anthropic, a partir do enunciado do trabalho e de pedidos sucessivos do grupo. O assistente também executou os testes, abriu a aplicação no navegador para conferi-la, fez os testes com as APIs reais e coletou as respostas do ChatGPT, do Claude e do Gemini web no navegador de um integrante, com autorização dele.
+O grupo usou o Claude Code, assistente de programação da Anthropic, como apoio técnico durante todo o projeto. Ele nos orientou na arquitetura e nas escolhas técnicas, nos ajudou a desenvolver o código e a resolver os problemas de programação que apareceram no caminho. Boa parte do código, dos testes e da documentação foi escrita com o assistente, a partir dos nossos pedidos, e depois revisada e testada pelo grupo. Ele também ajudou a redigir os slides e este relatório, e executou os testes com as APIs reais e a coleta das respostas do ChatGPT, do Claude e do Gemini web, com autorização do integrante dono da conta.
 
-O trabalho com o assistente foi conduzido por João Pedro Ferreira, que:
+O que ficou com o grupo:
 
-- definiu o problema, os requisitos e a stack desejada no pedido inicial ao assistente;
-- rejeitou a primeira versão da interface, por parecer "feita por IA" (emojis, cores padrão), e pediu um visual sóbrio, que é o atual;
-- criou as chaves de API, publicou o app no Streamlit Community Cloud e configurou a senha;
-- testou o app publicado e encontrou dois problemas que os testes automatizados não pegaram: um erro depois da troca de modelo, porque o app publicado ainda rodava uma versão antiga do código, e a planilha exportada, que abria toda numa coluna só no Excel em português;
-- decidiu trocar o modelo padrão para o Gemini 3.5 Flash-Lite depois de ver o 3.8 Flash travar, e escolheu o Groq e a NVIDIA para a comparação de modelos;
-- percebeu que o agente respondia perguntas sem relação com o negócio ("o que é Python?") e pediu o bloqueio;
-- considerou a apresentação técnica demais e pediu que ela fosse reorganizada em torno das dificuldades do projeto.
+- definir o problema, os requisitos e as ferramentas do projeto;
+- decidir a taxonomia de temas, os modelos a comparar (Groq e NVIDIA) e a troca do modelo padrão para o Gemini 3.5 Flash-Lite quando o 3.8 Flash travou;
+- criar as chaves de API, publicar o app no Streamlit Community Cloud e configurar o acesso;
+- testar o app como usuário e encontrar problemas que os testes automatizados não pegaram: a planilha exportada que abria toda numa coluna só no Excel, o app publicado rodando uma versão antiga e o agente respondendo perguntas sem relação com o negócio ("o que é Python?");
+- pedir um visual sóbrio no lugar da primeira interface, que parecia "feita por IA";
+- interpretar os resultados da comparação de modelos, fazer a análise crítica e escrever as conclusões;
+- estudar um módulo do código cada um (seção 3.1), para conseguir explicá-lo na apresentação.
 
-Os demais integrantes revisaram as partes sob sua responsabilidade (seção 3.1) e estudaram um módulo do código cada um, para conseguir explicá-lo na apresentação. Os commits do repositório estão no nome de João Pedro Ferreira, por escolha do grupo, mas a maior parte do conteúdo foi gerada pelo assistente.
-
-Erros do assistente que só apareceram em teste real: a escolha inicial de um modelo do Gemini que já tinha sido descontinuado, preços desatualizados na estimativa de custo, uma substituição automática de texto que corrompeu a configuração, datas lidas no formato errado e um modelo do Groq indicado como padrão que só estava disponível no plano empresarial. Todos foram corrigidos, mas mostram que código gerado por IA precisa ser testado em condições reais.
+Problemas de programação resolvidos com a ajuda do assistente: o modelo do Gemini descontinuado, a lentidão e o fim da cota gratuita (tempo limite, modelo reserva e retomada do processamento), as datas lidas no formato errado, a exportação para Excel e o bloqueio das perguntas fora do escopo. O próprio assistente também errou: indicou preços desatualizados, fez uma substituição de texto que corrompeu a configuração e sugeriu um modelo do Groq que só estava disponível no plano empresarial. Tudo foi corrigido, mas mostra que código feito com IA precisa ser testado em condições reais.
 
 ### 3.6 Exploração de outras ferramentas
 
@@ -147,7 +145,7 @@ Limitações e lições aprendidas:
 - Limites do plano gratuito. Poucas chamadas por dia e erros de sobrecarga atrasaram os testes e exigiram mudanças no código, como o tempo limite, o modelo reserva e a retomada depois do fim da cota.
 - Testes automáticos não bastam. Os erros mais sérios (datas, exportação para Excel, app publicado desatualizado, agente respondendo qualquer pergunta) só apareceram com dados reais e com o app aberto como um usuário faria.
 - Alucinação e privacidade. Resumos e diagnósticos podem afirmar algo sem base no texto, e no plano gratuito os textos podem ser usados pelo provedor; a anonimização reduz, mas não elimina, esse risco.
-- Desenvolvimento com IA. O assistente de programação acelerou muito o trabalho, mas produziu um sistema maior do que o grupo faria sozinho e cometeu erros que só a revisão e os testes reais revelaram.
+- Desenvolvimento com IA. O assistente de programação acelerou muito o trabalho e ajudou a resolver problemas que o grupo levaria mais tempo para resolver sozinho, mas também cometeu erros que só a revisão e os testes reais revelaram.
 
 Questões éticas. A ferramenta apoia, mas não substitui, a leitura das avaliações pelo dono do negócio. Usar a classificação para punir funcionários citados seria inadequado.
 
@@ -157,7 +155,7 @@ Na nossa avaliação, a IA generativa resolve bem o problema proposto. Classific
 
 Também concluímos que valeu a pena construir uma aplicação em vez de usar um chat. O ChatGPT, o Claude e o Gemini classificam tão bem quanto a aplicação, mas não processam centenas de avaliações sozinhos, não conferem o formato, não dão o mesmo resultado duas vezes e não entregam painel nem prioridades. O valor do Feedback Radar está nesse processo.
 
-Por fim, usar um assistente de IA para programar mudou o nosso papel: escrevemos pouco código e passamos a maior parte do tempo decidindo, testando e encontrando problemas. Essa experiência nos mostrou que a IA acelera muito o desenvolvimento, mas não substitui quem testa, desconfia dos resultados e entende o que está sendo entregue.
+Por fim, usar um assistente de IA para programar mudou a forma de trabalhar: passamos mais tempo decidindo, testando e encontrando problemas, e menos tempo presos em erros de programação. Essa experiência nos mostrou que a IA acelera muito o desenvolvimento, mas não substitui quem testa, desconfia dos resultados e entende o que está sendo entregue.
 
 Sugestões futuras:
 
