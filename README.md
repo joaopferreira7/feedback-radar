@@ -1,6 +1,6 @@
 # Feedback Radar
 
-Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard**, um **relatório de prioridades de melhoria** com exemplos reais e um **agente analista** que responde perguntas sobre as avaliações investigando os dados em vários passos (busca semântica e ferramentas de contagem). O diferencial é a **comparação de modelos**: as mesmas 100 avaliações reais são classificadas por três IAs de empresas diferentes (Gemini, GPT-OSS via Groq e MiniMax via NVIDIA), e a aplicação mostra onde elas concordam e onde divergem.
+Projeto acadêmico de IA Generativa: o usuário envia um CSV de avaliações de clientes (Google, iFood, Instagram...), um LLM classifica **sentimento**, **temas** e **intensidade** de cada uma, e o sistema gera um **dashboard**, um **relatório de prioridades de melhoria** com exemplos reais e um **agente analista** que responde perguntas sobre as avaliações investigando os dados em vários passos (busca semântica e ferramentas de contagem). O diferencial é a **comparação de modelos**: as mesmas 100 avaliações reais são classificadas por três IAs de empresas diferentes (Gemini, GPT-OSS via Groq e Nemotron Bolt via NVIDIA; o MiniMax foi trocado em 15/11/2026 por lentidão), e a aplicação mostra onde elas concordam e onde divergem.
 
 ## Como rodar localmente
 
@@ -101,6 +101,7 @@ feedback-radar/
 8. [Relatório acadêmico](docs/etapa-8-relatorio-academico.md) e [apêndice dos prompts](docs/apendice-prompts.md)
 9. [Agente analista](docs/etapa-9-agente-analista.md)
 10. [Comparação de modelos: Gemini, Groq e NVIDIA](docs/comparacao-modelos.md)
+11. [Arquitetura para apresentação](docs/arquitetura-apresentacao.md)
 
 Extras: [Datasets, coleta de dados reais e LGPD](docs/dados-e-privacidade.md) · [Do protótipo à aplicação prática](docs/aplicacao-pratica.md) · [Publicação](docs/deploy.md)
 

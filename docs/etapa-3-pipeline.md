@@ -45,6 +45,8 @@ flowchart TD
 
 ## Controle de custo e tempo
 
+> Nota: o modelo padrão atual é o `gemini-3.5-flash-lite` (ver `feedback_radar/config.py`). Os números de 21/10/2026 abaixo foram medidos com o `gemini-3.8-flash`, o padrão da época.
+
 - **Estimativa antes de rodar** (`estimar_custo`): nº de chamadas, tokens e custo em US$ se fosse plano pago. O app mostra isso antes do botão "Classificar"; a linha de comando pede confirmação.
 - **Contabilidade real** (`Estatisticas`): chamadas, retries, tokens de entrada/saída lidos da resposta da API, tempo total.
 - **Teto por execução**: `MAX_AVALIACOES=500` no `.env`.
